@@ -15,7 +15,7 @@ public class UI_InfoManager : MonoBehaviour
     private InventoryService inventoryService;
     private ShopService shopService;
 
-    private TextMeshProUGUI[] itemInfoPanelTexts; 
+    private TextMeshProUGUI[] itemInfoPanelTexts;
     private void Awake()
     {
         itemInfoPanel.SetActive(false);
@@ -33,15 +33,22 @@ public class UI_InfoManager : MonoBehaviour
 
     private void PopUpInfoPanel(int layer, int itemIndex)
     {
+        ItemScriptableObject item;
         if (layer == inventoryPanel.layer)
-            ShowInfo(inventoryService.inventoryItems[itemIndex]);
+        {
+            item = inventoryService.inventoryItems[itemIndex];
+            ShowInfo(item, item.sellingPrice);
+        }
         else if (layer == shopPanel.layer)
-            ShowInfo(shopService.shopItems[itemIndex]);
+        {
+            item = shopService.shopItems[itemIndex];
+            ShowInfo(item, item.buyingPrice);
+        }
         else
             itemInfoPanel.SetActive(false);
     }
 
-    private void ShowInfo(ItemScriptableObject itemInfo)
+    private void ShowInfo(ItemScriptableObject itemInfo, int price)
     {
         itemInfoPanel.SetActive(true);
         itemInfoPanelTexts[0].text = itemInfo.name.ToString();
@@ -49,6 +56,6 @@ public class UI_InfoManager : MonoBehaviour
         itemInfoPanelTexts[2].text = itemInfo.itemDescription.ToString();
         itemInfoPanelTexts[3].text = itemInfo.rarity.ToString();
         itemInfoPanelTexts[4].text = "Weight: " + itemInfo.weight.ToString();
-        itemInfoPanelTexts[5].text = "Price: " + itemInfo.buyingPrice.ToString() + " Qty: " + itemInfo.quantity.ToString();
+        itemInfoPanelTexts[5].text = "Price: " + price.ToString() + " Qty: " + itemInfo.quantity.ToString();
     }
 }
