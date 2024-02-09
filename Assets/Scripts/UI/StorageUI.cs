@@ -9,7 +9,7 @@ public class StorageUI
 {
     public GameObject storagePanel;
     public List<GameObject> itemsInStorage;
-    
+
     public StorageUI(GameObject _StoragePanel, List<ItemScriptableObject> itemDataList)
     {
         storagePanel = _StoragePanel;
@@ -23,17 +23,33 @@ public class StorageUI
         var itemDataList = itemData;
 
         foreach (var item in itemDataList)
-        {
-            if (item.quantity == 0)
-                continue;
+            AddItemToStorage(item);
+    }
 
-            GameObject itemUIElement = GameObject.Instantiate(item.itemUIPrefab, storagePanel.transform);
-            itemUIElement.transform.GetChild((int)ItemPanelComponents.Icon).GetComponent<Image>().sprite = item.itemIcon;
-            itemUIElement.transform.GetChild((int)ItemPanelComponents.Quantity).GetComponent<TextMeshProUGUI>().text = item.quantity.ToString();
+    public void AddItemToStorage(ItemScriptableObject item)
+    {
+        if (item.quantity == 0)
+            return;
 
-            itemUIElement.name = item.name;
+        GameObject itemUIElement = GameObject.Instantiate(item.itemUIPrefab, storagePanel.transform);
+        itemUIElement.transform.GetChild((int)ItemPanelComponents.Icon).GetComponent<Image>().sprite = item.itemIcon;
+        itemUIElement.transform.GetChild((int)ItemPanelComponents.Quantity).GetComponent<TextMeshProUGUI>().text = item.quantity.ToString();
 
-            itemsInStorage.Add(itemUIElement);
-        }
+        itemUIElement.name = item.name;
+
+        itemsInStorage.Add(itemUIElement);
+    }
+
+    public void UpdateItemQuantity(int itemIndex, int amount)
+    {
+        GameObject itemUpdated = itemsInStorage[itemIndex];
+        TextMeshProUGUI textComponent = itemUpdated.transform.GetChild((int)ItemPanelComponents.Quantity).GetComponent<TextMeshProUGUI>();
+
+        string updateText = textComponent.text;
+        int quantity = int.Parse(updateText);
+        quantity += amount;
+
+        updateText = quantity.ToString();
+        textComponent.text = updateText;
     }
 }

@@ -14,6 +14,7 @@ public class ShopService
     public ShopService(GameObject _shopPanel, string dataLoadPath)
     {
         shopPanel = _shopPanel;
+        shopItems = new List<ItemScriptableObject>();
         LoadData(dataLoadPath);
     }
 
@@ -25,7 +26,12 @@ public class ShopService
 
     private void InitializeShopUI(ItemScriptableObject[] shopItemsList)
     {
-        shopItems = new List<ItemScriptableObject>(shopItemsList);
+        foreach (var item in shopItemsList)
+        {
+            var newItem = GameObject.Instantiate(item);
+            newItem.name = item.name;
+            shopItems.Add(newItem);
+        }
         shopUI = new StorageUI(shopPanel, shopItems);
     }
 }

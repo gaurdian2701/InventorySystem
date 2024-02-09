@@ -44,6 +44,8 @@ public class StorageService : GenericMonoSingleton<StorageService>, IPointerClic
 
     public GameObject GetShopPanel() {  return shopPanel; }
     public GameObject GetInventoryPanel() { return inventoryPanel; } 
+
+    public void GatherResources() { inventoryService.FillInventory(); }
     private void HandleClickLogic()
     {
         int layer = results[0].gameObject.transform.parent.gameObject.layer;
