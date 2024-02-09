@@ -64,6 +64,8 @@ public class InventoryService
             inventoryUI.UpdateItemQuantity(index, item.quantity);
         }
         currentWeight += item.weight;
+
+        EventService.Instance.onInventoryUpdated.InvokeEvent(0, currentWeight);
     }
 
     public void FillInventory()

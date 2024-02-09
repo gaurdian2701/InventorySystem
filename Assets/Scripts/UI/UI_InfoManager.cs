@@ -8,6 +8,8 @@ using UnityEngine.UI;
 public class UI_InfoManager : MonoBehaviour
 {
     [SerializeField] private GameObject itemInfoPanel;
+    [SerializeField] private TextMeshProUGUI currencyText;
+    [SerializeField] private TextMeshProUGUI weightText;
 
     private GameObject inventoryPanel;
     private GameObject shopPanel;
@@ -21,6 +23,7 @@ public class UI_InfoManager : MonoBehaviour
         itemInfoPanel.SetActive(false);
 
         EventService.Instance.onItemUIClickedEvent.AddEventListener(PopUpInfoPanel);
+        EventService.Instance.onInventoryUpdated.AddEventListener(UpdateCurrencyAndWeight);
 
         inventoryPanel = StorageService.Instance.GetInventoryPanel();
         shopPanel = StorageService.Instance.GetShopPanel();
@@ -29,6 +32,12 @@ public class UI_InfoManager : MonoBehaviour
         shopService = StorageService.Instance.shopService;
 
         itemInfoPanelTexts = itemInfoPanel.GetComponentsInChildren<TextMeshProUGUI>();
+    }
+
+    private void UpdateCurrencyAndWeight(int currency, float weight)
+    {
+        currencyText.text = currency.ToString();    
+        weightText.text = weight.ToString();
     }
 
     private void PopUpInfoPanel(int layer, int itemIndex)
