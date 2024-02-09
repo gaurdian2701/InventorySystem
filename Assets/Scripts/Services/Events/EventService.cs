@@ -4,15 +4,14 @@ using UnityEngine;
 
 public class EventService : GenericMonoSingleton<EventService>
 {
+    public EventController<int, int> onItemUIClickedEvent;
     protected override void Awake()
     {
         base.Awake();
     }
 
-    public EventController<int> onItemUIClicked { get; private set; }
-
     public EventService()
     {
-        onItemUIClicked = new EventController<int>();
+        onItemUIClickedEvent = new EventController<int, int>();
     }
 }

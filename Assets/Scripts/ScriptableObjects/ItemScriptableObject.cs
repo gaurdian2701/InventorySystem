@@ -7,6 +7,7 @@ public class ItemScriptableObject : ScriptableObject
     public GameObject itemUIPrefab;
     public Sprite itemIcon;
     public ItemType type;
+    public string itemDescription;
     public ItemRarity rarity;
     public int quantity;
     public int buyingPrice;

@@ -7,13 +7,14 @@ using UnityEngine.UI;
 
 public class StorageUI
 {
-    public GameObject StoragePanel;
-    public List<GameObject> ItemsInStorage;
+    public GameObject storagePanel;
+    public List<GameObject> itemsInStorage;
     
     public StorageUI(GameObject _StoragePanel, List<ItemScriptableObject> itemDataList)
     {
-        StoragePanel = _StoragePanel;
-        ItemsInStorage = new List<GameObject>();
+        storagePanel = _StoragePanel;
+        itemsInStorage = new List<GameObject>();
+
         InitializeStorageUI(itemDataList);
     }
 
@@ -26,15 +27,13 @@ public class StorageUI
             if (item.quantity == 0)
                 continue;
 
-            GameObject itemUIElement = GameObject.Instantiate(item.itemUIPrefab, StoragePanel.transform);
+            GameObject itemUIElement = GameObject.Instantiate(item.itemUIPrefab, storagePanel.transform);
             itemUIElement.transform.GetChild((int)ItemPanelComponents.Icon).GetComponent<Image>().sprite = item.itemIcon;
             itemUIElement.transform.GetChild((int)ItemPanelComponents.Quantity).GetComponent<TextMeshProUGUI>().text = item.quantity.ToString();
 
-            ItemsInStorage.Add(itemUIElement);
-        }
-    }
+            itemUIElement.name = item.name;
 
-    public void DeleteItem(GameObject item)
-    {
+            itemsInStorage.Add(itemUIElement);
+        }
     }
 }

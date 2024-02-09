@@ -15,6 +15,7 @@ MonoBehaviour:
   itemUIPrefab: {fileID: 3808915681365129664, guid: 390aaa73af4cc534dbe357c6b5ab6213, type: 3}
   itemIcon: {fileID: 442537937, guid: 67616ddcb1f113b4b8f91a5126610808, type: 3}
   type: 2
+  itemDescription: Highly effective against orcs. Deals 10 dph.
   rarity: 1
   quantity: 5
   buyingPrice: 100

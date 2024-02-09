@@ -10,13 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e570952a5b1256b46b27bb11ab3e5bcf, type: 3}
-  m_Name: Carrot
+  m_Name: RareSword
   m_EditorClassIdentifier: 
   itemUIPrefab: {fileID: 3808915681365129664, guid: 390aaa73af4cc534dbe357c6b5ab6213, type: 3}
-  itemIcon: {fileID: 927847249, guid: 67616ddcb1f113b4b8f91a5126610808, type: 3}
-  type: 3
-  rarity: 1
-  quantity: 30
-  buyingPrice: 2
-  sellingPrice: 1
-  weight: 0.1
+  itemIcon: {fileID: -2036501853, guid: 67616ddcb1f113b4b8f91a5126610808, type: 3}
+  type: 2
+  itemDescription: Highly effective against humans. Deals 20 dph.
+  rarity: 3
+  quantity: 1
+  buyingPrice: 1000
+  sellingPrice: 500
+  weight: 8

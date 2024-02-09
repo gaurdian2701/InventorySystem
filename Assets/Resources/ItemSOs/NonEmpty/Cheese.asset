@@ -10,13 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e570952a5b1256b46b27bb11ab3e5bcf, type: 3}
-  m_Name: MysteryChest
+  m_Name: Cheese
   m_EditorClassIdentifier: 
   itemUIPrefab: {fileID: 3808915681365129664, guid: 390aaa73af4cc534dbe357c6b5ab6213, type: 3}
-  itemIcon: {fileID: -53949780, guid: 67616ddcb1f113b4b8f91a5126610808, type: 3}
-  type: 4
-  rarity: 3
-  quantity: 1
-  buyingPrice: 5000
-  sellingPrice: 2000
-  weight: 2
+  itemIcon: {fileID: -836694122, guid: 67616ddcb1f113b4b8f91a5126610808, type: 3}
+  type: 3
+  itemDescription: 'Health Recovery: +1.5 for 12 seconds.'
+  rarity: 1
+  quantity: 10
+  buyingPrice: 5
+  sellingPrice: 2
+  weight: 1
