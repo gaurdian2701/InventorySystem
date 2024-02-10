@@ -18,6 +18,41 @@ public class ShopService
         LoadData(dataLoadPath);
     }
 
+    public void AddItemToShop(ItemScriptableObject item, int quantity)
+    {
+        ItemScriptableObject itemFound = shopItems.Find((x) => x.name == item.name);
+        int index = int.MinValue;
+
+        if (!itemFound)
+        {
+            shopItems.Add(item);
+            item.quantity = quantity;
+        }
+
+        else
+        {
+            itemFound.quantity += quantity;
+            index = shopItems.IndexOf(itemFound);
+        }
+
+        shopUI.AddItemToStorage(item, quantity, index);
+    }
+
+    public void RemoveItemFromShop(ItemScriptableObject item, int quantity)
+    {
+        ItemScriptableObject itemFound = shopItems.Find((x) => x.name == item.name);
+
+        if (!itemFound || itemFound.quantity < quantity)
+            return;
+
+        int index = shopItems.IndexOf(itemFound);
+        shopUI.RemoveItemFromStorage(itemFound, index, quantity);
+
+        if(itemFound.quantity - quantity == 0)
+            shopItems.Remove(itemFound);
+        else
+            itemFound.quantity -= quantity;
+    }
     private void LoadData(string dataLoadPath)
     {
         var shopItemsList = Resources.LoadAll<ItemScriptableObject>(dataLoadPath); //Loading all the shop items

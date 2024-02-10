@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class StorageService : GenericMonoSingleton<StorageService>, IPointerClickHandler
+public class StorageController : GenericMonoSingleton<StorageController>, IPointerClickHandler
 {
     [Header("MAIN UI PANELS")]
     [SerializeField] private GameObject inventoryPanel;
@@ -46,6 +46,7 @@ public class StorageService : GenericMonoSingleton<StorageService>, IPointerClic
     public GameObject GetInventoryPanel() { return inventoryPanel; } 
 
     public void GatherResources() { inventoryService.FillInventory(); }
+
     private void HandleClickLogic()
     {
         int layer = results[0].gameObject.transform.parent.gameObject.layer;

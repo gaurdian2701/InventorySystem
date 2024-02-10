@@ -17,6 +17,7 @@ public class UI_InfoManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI buySellInfoHeading;
     [SerializeField] private TextMeshProUGUI buySellInfoText;
     [SerializeField] private TextMeshProUGUI buySellButtonText;
+    [SerializeField] private TextMeshProUGUI transactionStatusText;
 
     private GameObject inventoryPanel;
     private GameObject shopPanel;
@@ -26,6 +27,7 @@ public class UI_InfoManager : MonoBehaviour
 
     private ItemScriptableObject currentItemSelected;
     private int itemAmountSelected;
+    private int playerCoinsOwned;
 
     private TextMeshProUGUI[] itemInfoPanelTexts;
 
@@ -45,24 +47,37 @@ public class UI_InfoManager : MonoBehaviour
         EventService.Instance.onItemUIClickedEvent.AddEventListener(PopUpInfoPanel);
         EventService.Instance.onInventoryUpdated.AddEventListener(UpdateCurrencyAndWeight);
 
-        inventoryPanel = StorageService.Instance.GetInventoryPanel();
-        shopPanel = StorageService.Instance.GetShopPanel();
+        inventoryPanel = StorageController.Instance.GetInventoryPanel();
+        shopPanel = StorageController.Instance.GetShopPanel();
 
-        inventoryService = StorageService.Instance.inventoryService;
-        shopService = StorageService.Instance.shopService;
+        inventoryService = StorageController.Instance.inventoryService;
+        shopService = StorageController.Instance.shopService;
 
         itemInfoPanelTexts = itemInfoPanel.GetComponentsInChildren<TextMeshProUGUI>();
         itemAmountSelected = 0;
+        playerCoinsOwned = 0;
+
+        ClearTransactionStatusText();
     }
 
-    private void UpdateCurrencyAndWeight(int currency, float weight)
+    private void UpdateCurrencyAndWeight(int amountOwned, float weight)
     {
-        currencyText.text = currency.ToString();
+        playerCoinsOwned = amountOwned;
+        currencyText.text = playerCoinsOwned.ToString();
         weightText.text = weight.ToString();
     }
 
+    private bool CanBuy()
+    {
+        if (playerCoinsOwned < currentItemSelected.buyingPrice * itemAmountSelected)
+            return false;
+        return true;
+    }
     private void PopUpInfoPanel(int layer, int itemIndex)
     {
+        if (buySellPanel.activeInHierarchy)
+            CloseBuySellPanel();
+
         ItemScriptableObject item;
         if (layer == inventoryPanel.layer)
         {
@@ -78,12 +93,8 @@ public class UI_InfoManager : MonoBehaviour
         }
         else
         {
-            if (buySellPanel.activeInHierarchy)
-                buySellPanel.SetActive(false);
-
-            itemInfoPanel.SetActive(false);
             currentItemSelected = null;
-            itemAmountSelected = 0;
+            itemInfoPanel.SetActive(false);
         }
     }
 
@@ -103,9 +114,7 @@ public class UI_InfoManager : MonoBehaviour
 
     public void ShowBuySellPanel()
     {
-        buySellPanel.SetActive(true);
-        buySellInfoHeading.text = $"HOW MANY DO YOU WANT TO {currentAction}?";
-        UpdateByIncrease();
+        OpenBuySellPanel();
     }
 
     public void UpdateByIncrease()
@@ -113,7 +122,8 @@ public class UI_InfoManager : MonoBehaviour
         if (itemAmountSelected >= currentItemSelected.quantity)
             return;
 
-        buySellInfoText.text = $"{++itemAmountSelected} {currentItemSelected.name} FOR {itemAmountSelected * currentItemSelected.sellingPrice} coins";
+        int price = currentAction == CurrentAction.BUY ? currentItemSelected.buyingPrice : currentItemSelected.sellingPrice;
+        buySellInfoText.text = $"{++itemAmountSelected} {currentItemSelected.name} FOR {itemAmountSelected * price} coins";
     }
   
     public void UpdateByDecrease()
@@ -121,6 +131,59 @@ public class UI_InfoManager : MonoBehaviour
         if (itemAmountSelected <= 1)
             return;
 
-        buySellInfoText.text = $"{--itemAmountSelected} {currentItemSelected.name} FOR {itemAmountSelected * currentItemSelected.sellingPrice} coins";
+        int price = currentAction == CurrentAction.BUY ? currentItemSelected.buyingPrice : currentItemSelected.sellingPrice;
+        buySellInfoText.text = $"{--itemAmountSelected} {currentItemSelected.name} FOR {itemAmountSelected * price} coins";
+    }
+
+    public void ConfirmPayment()
+    {
+        ItemScriptableObject itemToBeAdded = GameObject.Instantiate(currentItemSelected);
+        itemToBeAdded.name = currentItemSelected.name;
+        itemToBeAdded.quantity = itemAmountSelected;
+
+        if (currentAction == CurrentAction.SELL)
+        {
+            DisplayTransactionStatusMessage($"SOLD {itemAmountSelected} {currentItemSelected.name} for {currentItemSelected.sellingPrice * itemAmountSelected}");
+            inventoryService.RemoveItemFromInventory(currentItemSelected, itemAmountSelected);
+            shopService.AddItemToShop(itemToBeAdded, itemAmountSelected);
+        }
+
+        else if(currentAction == CurrentAction.BUY)
+        {
+            if(!CanBuy())
+            {
+                DisplayTransactionStatusMessage("NOT ENOUGH MONEY!");
+                return;
+            }
+
+            DisplayTransactionStatusMessage($"BOUGHT {itemAmountSelected} {currentItemSelected.name} for {currentItemSelected.buyingPrice * itemAmountSelected}");
+            shopService.RemoveItemFromShop(currentItemSelected, itemAmountSelected);
+            inventoryService.AddItemToInventory(itemToBeAdded, itemAmountSelected);
+        }
+
+        CloseBuySellPanel();
+        itemInfoPanel.SetActive(false);
+    }
+
+    private void DisplayTransactionStatusMessage(string message)
+    {
+        transactionStatusText.text = message;
+        if (IsInvoking(nameof(ClearTransactionStatusText)))
+            return;
+
+        Invoke(nameof(ClearTransactionStatusText), 3f);
+    }
+    private void ClearTransactionStatusText() => transactionStatusText.text = string.Empty;
+    private void CloseBuySellPanel()
+    {
+        buySellPanel.SetActive(false);
+        itemAmountSelected = 0;
+    }
+
+    private void OpenBuySellPanel()
+    {
+        buySellPanel.SetActive(true);
+        UpdateByIncrease();
+        buySellInfoHeading.text = $"HOW MANY DO YOU WANT TO {currentAction}?";
     }
 }
