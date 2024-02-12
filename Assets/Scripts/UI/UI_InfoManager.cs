@@ -22,9 +22,6 @@ public class UI_InfoManager : MonoBehaviour
     private GameObject inventoryPanel;
     private GameObject shopPanel;
 
-    private InventoryService inventoryService;
-    private ShopService shopService;
-
     private ItemScriptableObject currentItemSelected;
     private int itemAmountSelected;
     private int playerCoinsOwned;
@@ -48,10 +45,7 @@ public class UI_InfoManager : MonoBehaviour
         EventService.Instance.onInventoryUpdated.AddEventListener(UpdateCurrencyAndWeight);
 
         inventoryPanel = StorageController.Instance.GetInventoryPanel();
-        shopPanel = StorageController.Instance.GetShopPanel();
-
-        inventoryService = StorageController.Instance.inventoryService;
-        shopService = StorageController.Instance.shopService;
+        shopPanel = StorageController.Instance.GetActivePanel();
 
         itemInfoPanelTexts = itemInfoPanel.GetComponentsInChildren<TextMeshProUGUI>();
         itemAmountSelected = 0;
@@ -82,13 +76,13 @@ public class UI_InfoManager : MonoBehaviour
         if (layer == inventoryPanel.layer)
         {
             currentAction = CurrentAction.SELL;
-            item = inventoryService.inventoryItems[itemIndex];
+            item = StorageController.Instance.GetInventoryService().inventoryItems[itemIndex];
             ShowInfo(item, item.sellingPrice);
         }
         else if (layer == shopPanel.layer)
         {
             currentAction = CurrentAction.BUY;
-            item = shopService.shopItems[itemIndex];
+            item = StorageController.Instance.GetShopService().currentShopItemList[itemIndex];
             ShowInfo(item, item.buyingPrice);
         }
         else
@@ -117,6 +111,31 @@ public class UI_InfoManager : MonoBehaviour
         OpenBuySellPanel();
     }
 
+    public void ShowWeaponsPanel()
+    {
+        StorageController.Instance.SetActivePanel(ItemType.Weapon);
+    }
+
+    public void ShowConsumablesPanel()
+    {
+        StorageController.Instance.SetActivePanel(ItemType.Consumable);
+    }
+
+    public void ShowTreasuresPanel()
+    {
+        StorageController.Instance.SetActivePanel(ItemType.Treasure);
+    }
+
+    public void ShowMaterialsPanel()
+    {
+        StorageController.Instance.SetActivePanel(ItemType.Material);
+    }
+
+    public void ShowAllPanel()
+    {
+        StorageController.Instance.SetActivePanel(ItemType.None);
+    }
+
     public void UpdateByIncrease()
     {
         if (itemAmountSelected >= currentItemSelected.quantity)
@@ -137,15 +156,13 @@ public class UI_InfoManager : MonoBehaviour
 
     public void ConfirmPayment()
     {
-        ItemScriptableObject itemToBeAdded = GameObject.Instantiate(currentItemSelected);
-        itemToBeAdded.name = currentItemSelected.name;
-        itemToBeAdded.quantity = itemAmountSelected;
 
         if (currentAction == CurrentAction.SELL)
         {
             DisplayTransactionStatusMessage($"SOLD {itemAmountSelected} {currentItemSelected.name} for {currentItemSelected.sellingPrice * itemAmountSelected}");
-            inventoryService.RemoveItemFromInventory(currentItemSelected, itemAmountSelected);
-            shopService.AddItemToShop(itemToBeAdded, itemAmountSelected);
+            StorageController.Instance.DoSellTransaction(currentItemSelected, itemAmountSelected);
+            //inventoryService.RemoveItemFromInventory(currentItemSelected, itemAmountSelected);
+            //shopService.AddItemToShop(itemToBeAdded, itemAmountSelected);
         }
 
         else if(currentAction == CurrentAction.BUY)
@@ -156,9 +173,11 @@ public class UI_InfoManager : MonoBehaviour
                 return;
             }
 
+            Debug.Log("itemamountselected: " + itemAmountSelected);
             DisplayTransactionStatusMessage($"BOUGHT {itemAmountSelected} {currentItemSelected.name} for {currentItemSelected.buyingPrice * itemAmountSelected}");
-            shopService.RemoveItemFromShop(currentItemSelected, itemAmountSelected);
-            inventoryService.AddItemToInventory(itemToBeAdded, itemAmountSelected);
+            StorageController.Instance.DoBuyTransaction(currentItemSelected, itemAmountSelected);
+            //shopService.RemoveItemFromShop(currentItemSelected, itemAmountSelected);
+            //inventoryService.AddItemToInventory(itemToBeAdded, itemAmountSelected);
         }
 
         CloseBuySellPanel();

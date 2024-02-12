@@ -23,10 +23,10 @@ public class StorageUI
         var itemDataList = itemData;
 
         foreach (var item in itemDataList)
-            AddItemToStorage(item, item.quantity, int.MinValue);
+            AddItemToStorageUI(item, item.quantity, int.MinValue);
     }
 
-    public void AddItemToStorage(ItemScriptableObject item, int quantity, int index)
+    public void AddItemToStorageUI(ItemScriptableObject item, int quantity, int index)
     {
         if (item.quantity == 0)
             return;
@@ -60,14 +60,15 @@ public class StorageUI
         textComponent.text = updateText;
     }
 
-    public void RemoveItemFromStorage(ItemScriptableObject item, int itemIndex, int quantity)
+    public void RemoveItemFromStorageUI(ItemScriptableObject item, int quantity, int itemIndex)
     {
+        Debug.Log("Item quantity: " + item.quantity + " Minus quantity: " + quantity);
         GameObject itemRemoved = itemsInStorage[itemIndex];
 
         if (!itemRemoved)
             return;
 
-        if (item.quantity - quantity == 0)
+        if (item.quantity == 0)
         {
             itemsInStorage.Remove(itemRemoved);
             GameObject.Destroy(itemRemoved);
