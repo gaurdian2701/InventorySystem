@@ -18,6 +18,6 @@ MonoBehaviour:
   itemDescription: 'Health Recovery: +1.5 for 12 seconds.'
   rarity: 1
   quantity: 10
-  buyingPrice: 5
+  buyingPrice: 3
   sellingPrice: 2
   weight: 1

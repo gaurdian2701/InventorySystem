@@ -18,6 +18,6 @@ MonoBehaviour:
   itemDescription: Highly effective against orcs. Deals 10 dph.
   rarity: 1
   quantity: 5
-  buyingPrice: 100
+  buyingPrice: 30
   sellingPrice: 50
   weight: 3

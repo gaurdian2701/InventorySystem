@@ -18,30 +18,37 @@ public class StorageUI
         InitializeStorageUI(itemDataList);
     }
 
-    private void InitializeStorageUI(List<ItemScriptableObject> itemData)
+    private void InitializeStorageUI(List<ItemScriptableObject> itemData) //Fill corresponding UI panel with items
     {
         var itemDataList = itemData;
 
         foreach (var item in itemDataList)
-            AddItemToStorage(item);
+            AddItemToStorageUI(item, item.quantity, int.MinValue);
     }
 
-    public void AddItemToStorage(ItemScriptableObject item)
+    public void AddItemToStorageUI(ItemScriptableObject item, int quantity, int index)
     {
         if (item.quantity == 0)
             return;
 
-        GameObject itemUIElement = GameObject.Instantiate(item.itemUIPrefab, storagePanel.transform);
-        itemUIElement.transform.GetChild((int)ItemPanelComponents.Icon).GetComponent<Image>().sprite = item.itemIcon;
-        itemUIElement.transform.GetChild((int)ItemPanelComponents.Quantity).GetComponent<TextMeshProUGUI>().text = item.quantity.ToString();
+        if (index < 0)
+        {
+            GameObject itemUIElement = GameObject.Instantiate(item.itemUIPrefab, storagePanel.transform);
+            itemUIElement.transform.GetChild((int)ItemPanelComponents.Icon).GetComponent<Image>().sprite = item.itemIcon;
+            itemUIElement.transform.GetChild((int)ItemPanelComponents.Quantity).GetComponent<TextMeshProUGUI>().text = quantity.ToString();
 
-        itemUIElement.name = item.name;
-
-        itemsInStorage.Add(itemUIElement);
+            itemUIElement.name = item.name;
+            itemsInStorage.Add(itemUIElement);
+        }
+        else
+            UpdateItemQuantity(index, quantity);
     }
 
-    public void UpdateItemQuantity(int itemIndex, int amount)
+    private void UpdateItemQuantity(int itemIndex, int amount) 
     {
+        if (itemIndex < 0)
+            return;
+
         GameObject itemUpdated = itemsInStorage[itemIndex];
         TextMeshProUGUI textComponent = itemUpdated.transform.GetChild((int)ItemPanelComponents.Quantity).GetComponent<TextMeshProUGUI>();
 
@@ -51,5 +58,21 @@ public class StorageUI
 
         updateText = quantity.ToString();
         textComponent.text = updateText;
+    }
+
+    public void RemoveItemFromStorageUI(ItemScriptableObject item, int quantity, int itemIndex)
+    {
+        GameObject itemRemoved = itemsInStorage[itemIndex];
+
+        if (!itemRemoved)
+            return;
+
+        if (item.quantity == 0)
+        {
+            itemsInStorage.Remove(itemRemoved);
+            GameObject.Destroy(itemRemoved);
+        }
+        else
+            UpdateItemQuantity(itemIndex, -quantity);
     }
 }
