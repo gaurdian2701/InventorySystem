@@ -26,4 +26,8 @@ Design Patterns Used:
     - Used to enable loosely-coupled interaction between UI_InfoManager and StorageController
 
 Below is the Architecture Diagram:
+
+
+
+
 ![](2024-02-13-16-00-46.png)
