@@ -62,7 +62,6 @@ public class StorageUI
 
     public void RemoveItemFromStorageUI(ItemScriptableObject item, int quantity, int itemIndex)
     {
-        Debug.Log("Item quantity: " + item.quantity + " Minus quantity: " + quantity);
         GameObject itemRemoved = itemsInStorage[itemIndex];
 
         if (!itemRemoved)

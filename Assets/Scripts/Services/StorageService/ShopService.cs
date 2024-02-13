@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class ShopService
@@ -109,7 +110,7 @@ public class ShopService
         {
             mainIndex = mainShopList.IndexOf(itemFound);
             itemFound.quantity += quantity;
-            UpdateItemDataInOtherLists(item, out typeIndex);
+            FindItemInOtherLists(itemFound, out typeIndex);
         }
 
         mainShopUI.AddItemToStorageUI(item, quantity, mainIndex);
@@ -123,22 +124,18 @@ public class ShopService
         switch (item.type)
         {
             case ItemType.Weapon:
-                Debug.Log("item added to weapons list");
                 weaponsList.Add(item);
                 break;
 
             case ItemType.Consumable:
-                Debug.Log("item added to consumables list");
                 consumablesList.Add(item);
                 break;
 
             case ItemType.Treasure:
-                Debug.Log("item added to treasures list");
                 treasuresList.Add(item);
                 break;
 
             case ItemType.Material:
-                Debug.Log("item added to materials list");
                 materialsList.Add(item);
                 break;
 
@@ -147,55 +144,20 @@ public class ShopService
 
         item.quantity = quantity;
     }
-
-    private void UpdateItemDataInOtherLists(ItemScriptableObject itemInMainList, out int index)
-    {
-        index = -1;
-
-        switch (itemInMainList.type)
-        {
-            case ItemType.Weapon:
-                index = weaponsList.IndexOf(itemInMainList);
-                Debug.Log("weapons list updated");
-                break;
-
-            case ItemType.Consumable:
-                index = consumablesList.IndexOf(itemInMainList);
-                Debug.Log("consumables list updated");
-                break;
-
-            case ItemType.Treasure:
-                index = treasuresList.IndexOf(itemInMainList);
-                Debug.Log("treasures list updated");
-                break;
-
-            case ItemType.Material:
-                index = materialsList.IndexOf(itemInMainList);
-                Debug.Log("materials list updated");
-                break;
-
-            default: break;
-        }
-    }
-
     private void AddItemToTypeUI(ItemScriptableObject item, int quantity, int index)
     {
         switch (item.type)
         {
             case ItemType.Weapon:
-                Debug.Log("UI for weapons updated");
                 weaponsUI.AddItemToStorageUI(item, quantity, index);
                 break;
             case ItemType.Consumable:
-                Debug.Log("UI for consumables updated");
                 consumablesUI.AddItemToStorageUI(item, quantity, index);
                 break;
             case ItemType.Treasure:
-                Debug.Log("UI for treasures updated");
                 treasuresUI.AddItemToStorageUI(item, quantity, index);
                 break;
             case ItemType.Material:
-                Debug.Log("UI for materials updated");
                 materialsUI.AddItemToStorageUI(item, quantity, index);
                 break;
             default: break;
@@ -210,12 +172,14 @@ public class ShopService
             return;
 
         int mainIndex = mainShopList.IndexOf(itemFound);
-        int typeIndex = -1;
+        int typeIndex = 0;
+        var typeList = FindItemInOtherLists(itemFound, out typeIndex);
 
         if (itemFound.quantity - quantity == 0)
         {
             itemFound.quantity = 0;
-            RemoveItemFromOtherLists(itemFound, out typeIndex);
+
+            typeList.Remove(itemFound);
             mainShopList.Remove(itemFound);
         }
         else
@@ -225,37 +189,36 @@ public class ShopService
         RemoveItemFromTypeUI(itemFound, quantity, typeIndex);
     }
 
-    private void RemoveItemFromOtherLists(ItemScriptableObject item, out int index)
+    private List<ItemScriptableObject> FindItemInOtherLists(ItemScriptableObject item, out int index)
     {
-        index = -1;
+        List<ItemScriptableObject> typeList = new List<ItemScriptableObject>();
         switch (item.type)
         {
             case ItemType.Weapon:
-                Debug.Log("item removed from weapons list");
-                weaponsList.Remove(item);
                 index = weaponsList.IndexOf(item);
+                typeList = weaponsList;
                 break;
 
             case ItemType.Consumable:
-                Debug.Log("item removed from consumables list");
-                index = weaponsList.IndexOf(item);
-                consumablesList.Remove(item);
+                index = consumablesList.IndexOf(item);
+                typeList = consumablesList;
                 break;
 
             case ItemType.Treasure:
-                Debug.Log("item removed from treasures list");
-                treasuresList.Remove(item);
                 index = treasuresList.IndexOf(item);
+                typeList = treasuresList;
                 break;
 
             case ItemType.Material:
-                Debug.Log("item removed from materials list");
-                materialsList.Remove(item);
                 index = materialsList.IndexOf(item);
+                typeList = materialsList;
                 break;
 
-            default: break;
+            default:
+                index = -1;
+                break;
         }
+        return typeList;
     }
 
     private void RemoveItemFromTypeUI(ItemScriptableObject item, int quantity, int index)
@@ -263,23 +226,19 @@ public class ShopService
         switch (item.type)
         {
             case ItemType.Weapon:
-                Debug.Log("item removed from weapons UI");
                 weaponsUI.RemoveItemFromStorageUI(item, quantity, index);
                 break;
 
             case ItemType.Consumable:
-                Debug.Log("item removed from consumables UI");
                 consumablesUI.RemoveItemFromStorageUI(item, quantity, index);
                 break;
 
             case ItemType.Treasure:
-                Debug.Log("item removed from treasures UI");
-                treasuresUI.RemoveItemFromStorageUI(item, index, quantity);
+                treasuresUI.RemoveItemFromStorageUI(item, quantity, index);
                 break;
 
             case ItemType.Material:
-                Debug.Log("item removed from materials UI");
-                materialsUI.RemoveItemFromStorageUI(item, index, quantity);
+                materialsUI.RemoveItemFromStorageUI(item, quantity, index);
                 break;
 
             default: break;
