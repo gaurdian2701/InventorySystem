@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e570952a5b1256b46b27bb11ab3e5bcf, type: 3}
-  m_Name: Axe
+  m_Name: Iron
   m_EditorClassIdentifier: 
   itemUIPrefab: {fileID: 3808915681365129664, guid: 390aaa73af4cc534dbe357c6b5ab6213, type: 3}
-  itemIcon: {fileID: 442537937, guid: 67616ddcb1f113b4b8f91a5126610808, type: 3}
-  type: 2
-  itemDescription: Highly effective against orcs. Deals 10 dph.
+  itemIcon: {fileID: -1721108936, guid: 67616ddcb1f113b4b8f91a5126610808, type: 3}
+  type: 1
+  itemDescription: Useful for crafting weapons and armour.
   rarity: 1
   quantity: 5
-  buyingPrice: 30
-  sellingPrice: 50
-  weight: 3
+  buyingPrice: 10
+  sellingPrice: 5
+  weight: 1
