@@ -50,10 +50,15 @@ public class StorageController : GenericMonoSingleton<StorageController>, IPoint
 
         InitializePanels();
 
-        EventService.Instance.onBuyTransactionInitiated.AddEventListener(DoBuyTransaction);
-        EventService.Instance.onSellTransactionInitiated.AddEventListener(DoSellTransaction);
+        EventService.Instance.onBuyTransactionInitiated?.AddEventListener(DoBuyTransaction);
+        EventService.Instance.onSellTransactionInitiated?.AddEventListener(DoSellTransaction);
     }
 
+    private void OnDestroy()
+    {
+        EventService.Instance.onBuyTransactionInitiated?.RemoveEventListener(DoBuyTransaction);
+        EventService.Instance.onSellTransactionInitiated?.RemoveEventListener(DoSellTransaction);
+    }
     private void InitializePanels()
     {
         activePanel = mainShopPanel;
@@ -70,7 +75,7 @@ public class StorageController : GenericMonoSingleton<StorageController>, IPoint
         SetActivePanel(ItemType.None);
     }
 
-    private void DoBuyTransaction(ItemScriptableObject currentItemSelected, int itemAmountSelected)
+    private void DoBuyTransaction(ItemScriptableObject currentItemSelected, int itemAmountSelected) //
     {
         if (!CheckBuyTransactionPossibility(currentItemSelected, itemAmountSelected))
             return;
@@ -83,6 +88,8 @@ public class StorageController : GenericMonoSingleton<StorageController>, IPoint
         shopService.RemoveItemFromShop(currentItemSelected, itemAmountSelected);
     }
 
+    //Function to check if the BUY transaction can be done or not.
+    //If not, then it invokes an event that is listened to by the UI_InfoManager which in turn displays the appropriate failure message
     private bool CheckBuyTransactionPossibility(ItemScriptableObject itemToBeAdded, int itemAmountSelected)
     {
         if (!inventoryService.HasEnoughCoins(itemToBeAdded, itemAmountSelected))

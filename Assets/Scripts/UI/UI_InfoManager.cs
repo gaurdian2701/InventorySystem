@@ -40,9 +40,9 @@ public class UI_InfoManager : MonoBehaviour
         itemInfoPanel.SetActive(false);
         buySellPanel.SetActive(false);
 
-        EventService.Instance.onItemUIClickedEvent.AddEventListener(PopUpInfoPanel);
-        EventService.Instance.onInventoryUpdated.AddEventListener(UpdateCurrencyAndWeight);
-        EventService.Instance.onItemAdditionFailure.AddEventListener(HandleItemAdditionFailure);
+        EventService.Instance.onItemUIClickedEvent?.AddEventListener(PopUpInfoPanel);
+        EventService.Instance.onInventoryUpdated?.AddEventListener(UpdateCurrencyAndWeight);
+        EventService.Instance.onItemAdditionFailure?.AddEventListener(HandleItemAdditionFailure);
 
         inventoryPanel = StorageController.Instance.GetInventoryPanel();
         shopPanel = StorageController.Instance.GetActivePanel();
@@ -53,6 +53,12 @@ public class UI_InfoManager : MonoBehaviour
         ClearTransactionStatusText();
     }
 
+    private void OnDestroy()
+    {
+        EventService.Instance.onItemUIClickedEvent?.RemoveEventListener(PopUpInfoPanel);
+        EventService.Instance.onInventoryUpdated?.RemoveEventListener(UpdateCurrencyAndWeight);
+        EventService.Instance.onItemAdditionFailure?.RemoveEventListener(HandleItemAdditionFailure);
+    }
     private void HandleItemAdditionFailure(ItemAdditionFailureType type)
     {
         DisplayTransactionStatusMessage($"NOT ENOUGH {type}!");

@@ -74,9 +74,12 @@ public class ShopService
         weaponsUI = new StorageUI(weaponsPanel, weaponsList);
         consumablesUI = new StorageUI(consumablesPanel, consumablesList);
         treasuresUI = new StorageUI(treasuresPanel, treasuresList);
-        materialsUI = new StorageUI(materialsPanel, materialsList);
+        materialsUI = new StorageUI(materialsPanel, materialsList); //Creating StorageUI instances for each type panel
     }
 
+    //The currentShopItemList variable is used by the UI_InfoManager to read data belonging to the current active panel, 
+    //i.e.(All, Weapons, Consumables, etc.)
+    //This function is used to dynamically change the currentShopItemList to the type list corresponding to the panel selected
     public void SetCurrentList(ItemType listType)
     {
         switch(listType)
@@ -117,7 +120,7 @@ public class ShopService
         AddItemToTypeUI(item, quantity, typeIndex);
     }
 
-    private void AddItemToLists(ItemScriptableObject item, int quantity)
+    private void AddItemToLists(ItemScriptableObject item, int quantity) //Adds the item to the main list as well as the list corresponding to its type
     {
         mainShopList.Add(item);
 
@@ -144,7 +147,7 @@ public class ShopService
 
         item.quantity = quantity;
     }
-    private void AddItemToTypeUI(ItemScriptableObject item, int quantity, int index)
+    private void AddItemToTypeUI(ItemScriptableObject item, int quantity, int index) //Adds the item to the corresponding type panel
     {
         switch (item.type)
         {
@@ -189,7 +192,7 @@ public class ShopService
         RemoveItemFromTypeUI(itemFound, quantity, typeIndex);
     }
 
-    private List<ItemScriptableObject> FindItemInOtherLists(ItemScriptableObject item, out int index)
+    private List<ItemScriptableObject> FindItemInOtherLists(ItemScriptableObject item, out int index) //Finds the item in the corresponding type list
     {
         List<ItemScriptableObject> typeList = new List<ItemScriptableObject>();
         switch (item.type)
@@ -221,7 +224,7 @@ public class ShopService
         return typeList;
     }
 
-    private void RemoveItemFromTypeUI(ItemScriptableObject item, int quantity, int index)
+    private void RemoveItemFromTypeUI(ItemScriptableObject item, int quantity, int index) //Removes the item from the corresponding type panel
     {
         switch (item.type)
         {

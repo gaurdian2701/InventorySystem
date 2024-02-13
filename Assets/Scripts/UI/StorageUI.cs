@@ -18,7 +18,7 @@ public class StorageUI
         InitializeStorageUI(itemDataList);
     }
 
-    private void InitializeStorageUI(List<ItemScriptableObject> itemData)
+    private void InitializeStorageUI(List<ItemScriptableObject> itemData) //Fill corresponding UI panel with items
     {
         var itemDataList = itemData;
 
@@ -44,7 +44,7 @@ public class StorageUI
             UpdateItemQuantity(index, quantity);
     }
 
-    private void UpdateItemQuantity(int itemIndex, int amount)
+    private void UpdateItemQuantity(int itemIndex, int amount) 
     {
         if (itemIndex < 0)
             return;
