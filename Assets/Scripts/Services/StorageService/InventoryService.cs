@@ -14,7 +14,8 @@ public class InventoryService
 
     private float currentWeight;
     private int coinsOwned;
-    private int currentItemNumbers;
+
+    private bool isGathering;
 
     private StorageUI inventoryUI;
     public List<ItemScriptableObject> inventoryItems { get; private set; }
@@ -26,8 +27,9 @@ public class InventoryService
         weightLimit = inventorySO.weightLimit;
 
         currentWeight = 0f;
-        currentItemNumbers = 0;
         coinsOwned = 0;
+
+        isGathering = false;
 
         LoadData(dataLoadPath);
     }
@@ -48,9 +50,6 @@ public class InventoryService
 
     public void AddItemToInventory(ItemScriptableObject item, int quantity)
     {
-        if (!CanAddItems(item, quantity))
-            return; //Add logic to show appropriate message
-
         ItemScriptableObject itemFound = inventoryItems.Find((x) => x.name == item.name);
         int index = int.MinValue;
 
@@ -66,9 +65,11 @@ public class InventoryService
             index = inventoryItems.IndexOf(itemFound);
         }
 
-        inventoryUI.AddItemToStorage(item, quantity, index);
+        inventoryUI.AddItemToStorageUI(item, quantity, index);
         currentWeight += item.weight * quantity;
-        coinsOwned -= item.buyingPrice * quantity;
+
+        if(!isGathering)
+            coinsOwned -= item.buyingPrice * quantity;
 
         if(coinsOwned < 0)
             coinsOwned = 0;
@@ -84,16 +85,19 @@ public class InventoryService
             return;
 
         int index = inventoryItems.IndexOf(itemFound);
-        inventoryUI.RemoveItemFromStorage(itemFound, index, quantity);
 
         currentWeight -= itemFound.weight * quantity;
         coinsOwned += itemFound.sellingPrice * quantity;
 
-        if(itemFound.quantity - quantity == 0)
+        if (itemFound.quantity - quantity == 0)
+        {
+            itemFound.quantity = 0;
             inventoryItems.Remove(itemFound);
+        }
         else
             itemFound.quantity -= quantity;
 
+        inventoryUI.RemoveItemFromStorageUI(itemFound, quantity, index);
         EventService.Instance.onInventoryUpdated?.InvokeEvent(coinsOwned, currentWeight);
     }
 
@@ -101,18 +105,38 @@ public class InventoryService
     {
         var resourcesGathered = Resources.LoadAll<ItemScriptableObject>("ItemSOs/ResourceGathering");
 
+        isGathering = true;
+
         foreach (var item in resourcesGathered)
         {
             var newItem = GameObject.Instantiate<ItemScriptableObject>(item);
             newItem.name = item.name;
+
+            if (!HasEnoughWeight(newItem, newItem.quantity))
+            {
+                EventService.Instance.onItemAdditionFailure.InvokeEvent(ItemAdditionFailureType.WEIGHT);
+                break;
+            }
+            
             AddItemToInventory(newItem, newItem.quantity);
         }
+
+        isGathering = false;
     }
 
-    private bool CanAddItems(ItemScriptableObject item, int quantity)
+    public bool HasEnoughWeight(ItemScriptableObject item, int quantity)
     {
         if (currentWeight + item.weight * quantity > weightLimit)
             return false;
+
+        return true;
+    }
+
+    public bool HasEnoughCoins(ItemScriptableObject item, int quantity)
+    {
+        if (coinsOwned < item.buyingPrice * quantity)
+            return false;
+
         return true;
     }
 

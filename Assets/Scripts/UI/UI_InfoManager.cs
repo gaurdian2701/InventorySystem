@@ -22,12 +22,8 @@ public class UI_InfoManager : MonoBehaviour
     private GameObject inventoryPanel;
     private GameObject shopPanel;
 
-    private InventoryService inventoryService;
-    private ShopService shopService;
-
     private ItemScriptableObject currentItemSelected;
     private int itemAmountSelected;
-    private int playerCoinsOwned;
 
     private TextMeshProUGUI[] itemInfoPanelTexts;
 
@@ -44,35 +40,36 @@ public class UI_InfoManager : MonoBehaviour
         itemInfoPanel.SetActive(false);
         buySellPanel.SetActive(false);
 
-        EventService.Instance.onItemUIClickedEvent.AddEventListener(PopUpInfoPanel);
-        EventService.Instance.onInventoryUpdated.AddEventListener(UpdateCurrencyAndWeight);
+        EventService.Instance.onItemUIClickedEvent?.AddEventListener(PopUpInfoPanel);
+        EventService.Instance.onInventoryUpdated?.AddEventListener(UpdateCurrencyAndWeight);
+        EventService.Instance.onItemAdditionFailure?.AddEventListener(HandleItemAdditionFailure);
 
         inventoryPanel = StorageController.Instance.GetInventoryPanel();
-        shopPanel = StorageController.Instance.GetShopPanel();
-
-        inventoryService = StorageController.Instance.inventoryService;
-        shopService = StorageController.Instance.shopService;
+        shopPanel = StorageController.Instance.GetActivePanel();
 
         itemInfoPanelTexts = itemInfoPanel.GetComponentsInChildren<TextMeshProUGUI>();
         itemAmountSelected = 0;
-        playerCoinsOwned = 0;
 
         ClearTransactionStatusText();
     }
 
+    private void OnDestroy()
+    {
+        EventService.Instance.onItemUIClickedEvent?.RemoveEventListener(PopUpInfoPanel);
+        EventService.Instance.onInventoryUpdated?.RemoveEventListener(UpdateCurrencyAndWeight);
+        EventService.Instance.onItemAdditionFailure?.RemoveEventListener(HandleItemAdditionFailure);
+    }
+    private void HandleItemAdditionFailure(ItemAdditionFailureType type)
+    {
+        DisplayTransactionStatusMessage($"NOT ENOUGH {type}!");
+    }
+
     private void UpdateCurrencyAndWeight(int amountOwned, float weight)
     {
-        playerCoinsOwned = amountOwned;
-        currencyText.text = playerCoinsOwned.ToString();
+        currencyText.text = amountOwned.ToString();
         weightText.text = weight.ToString();
     }
 
-    private bool CanBuy()
-    {
-        if (playerCoinsOwned < currentItemSelected.buyingPrice * itemAmountSelected)
-            return false;
-        return true;
-    }
     private void PopUpInfoPanel(int layer, int itemIndex)
     {
         if (buySellPanel.activeInHierarchy)
@@ -82,13 +79,13 @@ public class UI_InfoManager : MonoBehaviour
         if (layer == inventoryPanel.layer)
         {
             currentAction = CurrentAction.SELL;
-            item = inventoryService.inventoryItems[itemIndex];
+            item = StorageController.Instance.GetInventoryService().inventoryItems[itemIndex];
             ShowInfo(item, item.sellingPrice);
         }
         else if (layer == shopPanel.layer)
         {
             currentAction = CurrentAction.BUY;
-            item = shopService.shopItems[itemIndex];
+            item = StorageController.Instance.GetShopService().currentShopItemList[itemIndex];
             ShowInfo(item, item.buyingPrice);
         }
         else
@@ -117,6 +114,31 @@ public class UI_InfoManager : MonoBehaviour
         OpenBuySellPanel();
     }
 
+    public void ShowWeaponsPanel()
+    {
+        StorageController.Instance.SetActivePanel(ItemType.Weapon);
+    }
+
+    public void ShowConsumablesPanel()
+    {
+        StorageController.Instance.SetActivePanel(ItemType.Consumable);
+    }
+
+    public void ShowTreasuresPanel()
+    {
+        StorageController.Instance.SetActivePanel(ItemType.Treasure);
+    }
+
+    public void ShowMaterialsPanel()
+    {
+        StorageController.Instance.SetActivePanel(ItemType.Material);
+    }
+
+    public void ShowAllPanel()
+    {
+        StorageController.Instance.SetActivePanel(ItemType.None);
+    }
+
     public void UpdateByIncrease()
     {
         if (itemAmountSelected >= currentItemSelected.quantity)
@@ -137,28 +159,17 @@ public class UI_InfoManager : MonoBehaviour
 
     public void ConfirmPayment()
     {
-        ItemScriptableObject itemToBeAdded = GameObject.Instantiate(currentItemSelected);
-        itemToBeAdded.name = currentItemSelected.name;
-        itemToBeAdded.quantity = itemAmountSelected;
 
         if (currentAction == CurrentAction.SELL)
         {
             DisplayTransactionStatusMessage($"SOLD {itemAmountSelected} {currentItemSelected.name} for {currentItemSelected.sellingPrice * itemAmountSelected}");
-            inventoryService.RemoveItemFromInventory(currentItemSelected, itemAmountSelected);
-            shopService.AddItemToShop(itemToBeAdded, itemAmountSelected);
+            EventService.Instance.onSellTransactionInitiated.InvokeEvent(currentItemSelected, itemAmountSelected);
         }
 
         else if(currentAction == CurrentAction.BUY)
         {
-            if(!CanBuy())
-            {
-                DisplayTransactionStatusMessage("NOT ENOUGH MONEY!");
-                return;
-            }
-
             DisplayTransactionStatusMessage($"BOUGHT {itemAmountSelected} {currentItemSelected.name} for {currentItemSelected.buyingPrice * itemAmountSelected}");
-            shopService.RemoveItemFromShop(currentItemSelected, itemAmountSelected);
-            inventoryService.AddItemToInventory(itemToBeAdded, itemAmountSelected);
+            EventService.Instance.onBuyTransactionInitiated.InvokeEvent(currentItemSelected, itemAmountSelected);
         }
 
         CloseBuySellPanel();
