@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e570952a5b1256b46b27bb11ab3e5bcf, type: 3}
+  m_Name: Axe
+  m_EditorClassIdentifier: 
+  itemUIPrefab: {fileID: 3808915681365129664, guid: 390aaa73af4cc534dbe357c6b5ab6213, type: 3}
+  itemIcon: {fileID: 442537937, guid: 67616ddcb1f113b4b8f91a5126610808, type: 3}
+  type: 2
+  itemDescription: Highly effective against orcs. Deals 10 dph.
+  rarity: 1
+  quantity: 5
+  buyingPrice: 30
+  sellingPrice: 50
+  weight: 3
