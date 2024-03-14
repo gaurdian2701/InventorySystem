@@ -50,14 +50,14 @@ public class StorageController : GenericMonoSingleton<StorageController>, IPoint
 
         InitializePanels();
 
-        EventService.Instance.OnBuyTransactionInitiated?.AddEventListener(DoBuyTransaction);
-        EventService.Instance.OnSellTransactionInitiated?.AddEventListener(DoSellTransaction);
+        GameService.Instance.EventService.OnBuyTransactionInitiated += DoBuyTransaction;
+        GameService.Instance.EventService.OnSellTransactionInitiated += DoSellTransaction;
     }
 
     private void OnDestroy()
     {
-        EventService.Instance.OnBuyTransactionInitiated?.RemoveEventListener(DoBuyTransaction);
-        EventService.Instance.OnSellTransactionInitiated?.RemoveEventListener(DoSellTransaction);
+        GameService.Instance.EventService.OnBuyTransactionInitiated -= DoBuyTransaction;
+        GameService.Instance.EventService.OnSellTransactionInitiated -= DoSellTransaction;
     }
     private void InitializePanels()
     {
@@ -94,13 +94,13 @@ public class StorageController : GenericMonoSingleton<StorageController>, IPoint
     {
         if (!inventoryService.HasEnoughCoins(itemToBeAdded, itemAmountSelected))
         {
-            EventService.Instance.OnItemAdditionFailure.InvokeEvent(ItemAdditionFailureType.MONEY);
+            GameService.Instance.EventService.OnItemAdditionFailure.Invoke(ItemAdditionFailureType.MONEY);
             return false;
         }
 
         else if (!inventoryService.HasEnoughWeight(itemToBeAdded, itemAmountSelected))
         {
-            EventService.Instance.OnItemAdditionFailure.InvokeEvent(ItemAdditionFailureType.WEIGHT);
+            GameService.Instance.EventService.OnItemAdditionFailure.Invoke(ItemAdditionFailureType.WEIGHT);
             return false;
         }
 
@@ -169,6 +169,6 @@ public class StorageController : GenericMonoSingleton<StorageController>, IPoint
         int layer = results[0].gameObject.transform.parent.gameObject.layer;
         int itemIndex = results[0].gameObject.transform.GetSiblingIndex(); //Getting the selected item
 
-        EventService.Instance.OnItemUIClickedEvent.InvokeEvent(layer, itemIndex);
+        GameService.Instance.EventService.OnItemUIClickedEvent.Invoke(layer, itemIndex);
     }
 }

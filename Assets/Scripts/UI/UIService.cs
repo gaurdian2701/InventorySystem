@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UI_InfoManager : MonoBehaviour
+public class UIService : MonoBehaviour
 {
     [Header("UI Panels")]
     [SerializeField] private GameObject itemInfoPanel;
@@ -40,9 +40,9 @@ public class UI_InfoManager : MonoBehaviour
         itemInfoPanel.SetActive(false);
         buySellPanel.SetActive(false);
 
-        EventService.Instance.OnItemUIClickedEvent?.AddEventListener(PopUpInfoPanel);
-        EventService.Instance.OnInventoryUpdated?.AddEventListener(UpdateCurrencyAndWeight);
-        EventService.Instance.OnItemAdditionFailure?.AddEventListener(HandleItemAdditionFailure);
+        GameService.Instance.EventService.OnItemUIClickedEvent += PopUpInfoPanel;
+        GameService.Instance.EventService.OnInventoryUpdated += UpdateCurrencyAndWeight;
+        GameService.Instance.EventService.OnItemAdditionFailure += HandleItemAdditionFailure;
 
         inventoryPanel = StorageController.Instance.GetInventoryPanel();
         shopPanel = StorageController.Instance.GetActivePanel();
@@ -55,9 +55,9 @@ public class UI_InfoManager : MonoBehaviour
 
     private void OnDestroy()
     {
-        EventService.Instance.OnItemUIClickedEvent?.RemoveEventListener(PopUpInfoPanel);
-        EventService.Instance.OnInventoryUpdated?.RemoveEventListener(UpdateCurrencyAndWeight);
-        EventService.Instance.OnItemAdditionFailure?.RemoveEventListener(HandleItemAdditionFailure);
+        GameService.Instance.EventService.OnItemUIClickedEvent -= PopUpInfoPanel;
+        GameService.Instance.EventService.OnInventoryUpdated -= UpdateCurrencyAndWeight;
+        GameService.Instance.EventService.OnItemAdditionFailure -= HandleItemAdditionFailure;
     }
     private void HandleItemAdditionFailure(ItemAdditionFailureType type)
     {
@@ -163,13 +163,13 @@ public class UI_InfoManager : MonoBehaviour
         if (currentAction == CurrentAction.SELL)
         {
             DisplayTransactionStatusMessage($"SOLD {itemAmountSelected} {currentItemSelected.name} for {currentItemSelected.SellingPrice * itemAmountSelected}");
-            EventService.Instance.OnSellTransactionInitiated.InvokeEvent(currentItemSelected, itemAmountSelected);
+            GameService.Instance.EventService.OnSellTransactionInitiated.Invoke(currentItemSelected, itemAmountSelected);
         }
 
         else if(currentAction == CurrentAction.BUY)
         {
             DisplayTransactionStatusMessage($"BOUGHT {itemAmountSelected} {currentItemSelected.name} for {currentItemSelected.BuyingPrice * itemAmountSelected}");
-            EventService.Instance.OnBuyTransactionInitiated.InvokeEvent(currentItemSelected, itemAmountSelected);
+            GameService.Instance.EventService.OnBuyTransactionInitiated.Invoke(currentItemSelected, itemAmountSelected);
         }
 
         CloseBuySellPanel();

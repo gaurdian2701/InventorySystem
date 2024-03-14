@@ -74,7 +74,7 @@ public class InventoryService
         if(coinsOwned < 0)
             coinsOwned = 0;
 
-        EventService.Instance.OnInventoryUpdated.InvokeEvent(coinsOwned, currentWeight);
+        GameService.Instance.EventService.OnInventoryUpdated.Invoke(coinsOwned, currentWeight);
     }
 
     public void RemoveItemFromInventory(ItemScriptableObject item, int quantity)
@@ -98,7 +98,7 @@ public class InventoryService
             itemFound.Quantity -= quantity;
 
         inventoryUI.RemoveItemFromStorageUI(itemFound, quantity, index);
-        EventService.Instance.OnInventoryUpdated?.InvokeEvent(coinsOwned, currentWeight);
+        GameService.Instance.EventService.OnInventoryUpdated.Invoke(coinsOwned, currentWeight);
     }
 
     public void FillInventory()
@@ -114,7 +114,7 @@ public class InventoryService
 
             if (!HasEnoughWeight(newItem, newItem.Quantity))
             {
-                EventService.Instance.OnItemAdditionFailure.InvokeEvent(ItemAdditionFailureType.WEIGHT);
+                GameService.Instance.EventService.OnItemAdditionFailure.Invoke(ItemAdditionFailureType.WEIGHT);
                 break;
             }
             
