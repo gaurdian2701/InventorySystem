@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e570952a5b1256b46b27bb11ab3e5bcf, type: 3}
   m_Name: Cheese
   m_EditorClassIdentifier: 
-  itemUIPrefab: {fileID: 3808915681365129664, guid: 390aaa73af4cc534dbe357c6b5ab6213, type: 3}
-  itemIcon: {fileID: -836694122, guid: 67616ddcb1f113b4b8f91a5126610808, type: 3}
-  type: 3
-  itemDescription: 'Health Recovery: +1.5 for 12 seconds.'
-  rarity: 1
-  quantity: 10
-  buyingPrice: 3
-  sellingPrice: 2
-  weight: 1
+  ItemUIPrefab: {fileID: 3808915681365129664, guid: 390aaa73af4cc534dbe357c6b5ab6213, type: 3}
+  ItemIcon: {fileID: -836694122, guid: 67616ddcb1f113b4b8f91a5126610808, type: 3}
+  Type: 3
+  ItemDescription: 'Health Recovery: +1.5 for 12 seconds'
+  Rarity: 1
+  Quantity: 10
+  BuyingPrice: 3
+  SellingPrice: 2
+  Weight: 1

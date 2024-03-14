@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e570952a5b1256b46b27bb11ab3e5bcf, type: 3}
   m_Name: Axe
   m_EditorClassIdentifier: 
-  itemUIPrefab: {fileID: 3808915681365129664, guid: 390aaa73af4cc534dbe357c6b5ab6213, type: 3}
-  itemIcon: {fileID: 442537937, guid: 67616ddcb1f113b4b8f91a5126610808, type: 3}
-  type: 2
-  itemDescription: Highly effective against orcs. Deals 10 dph.
-  rarity: 1
-  quantity: 5
-  buyingPrice: 30
-  sellingPrice: 50
-  weight: 3
+  ItemUIPrefab: {fileID: 3808915681365129664, guid: 390aaa73af4cc534dbe357c6b5ab6213, type: 3}
+  ItemIcon: {fileID: 442537937, guid: 67616ddcb1f113b4b8f91a5126610808, type: 3}
+  Type: 2
+  ItemDescription: Highly effective against orcs. Deals 10 dph.
+  Rarity: 1
+  Quantity: 5
+  BuyingPrice: 50
+  SellingPrice: 30
+  Weight: 3

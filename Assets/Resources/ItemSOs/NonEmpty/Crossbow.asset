@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e570952a5b1256b46b27bb11ab3e5bcf, type: 3}
   m_Name: Crossbow
   m_EditorClassIdentifier: 
-  itemUIPrefab: {fileID: 3808915681365129664, guid: 390aaa73af4cc534dbe357c6b5ab6213, type: 3}
-  itemIcon: {fileID: -1654483789, guid: 67616ddcb1f113b4b8f91a5126610808, type: 3}
-  type: 2
-  itemDescription: Highly effective against flying enemies. Deals 5 dph.
-  rarity: 3
-  quantity: 5
-  buyingPrice: 100
-  sellingPrice: 50
-  weight: 3
+  ItemUIPrefab: {fileID: 3808915681365129664, guid: 390aaa73af4cc534dbe357c6b5ab6213, type: 3}
+  ItemIcon: {fileID: -1654483789, guid: 67616ddcb1f113b4b8f91a5126610808, type: 3}
+  Type: 2
+  ItemDescription: Highly effective against flying enemies. Deals 5 dph
+  Rarity: 3
+  Quantity: 5
+  BuyingPrice: 100
+  SellingPrice: 50
+  Weight: 3

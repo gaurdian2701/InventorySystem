@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6985535bb1bfc840817dd3ad94b3307, type: 3}
   m_Name: EmptyInventory
   m_EditorClassIdentifier: 
-  itemLimit: 53
-  weightLimit: 80
+  ItemLimit: 30
+  WeightLimit: 80

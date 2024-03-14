@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e570952a5b1256b46b27bb11ab3e5bcf, type: 3}
   m_Name: Copper
   m_EditorClassIdentifier: 
-  itemUIPrefab: {fileID: 3808915681365129664, guid: 390aaa73af4cc534dbe357c6b5ab6213, type: 3}
-  itemIcon: {fileID: 121622845, guid: 67616ddcb1f113b4b8f91a5126610808, type: 3}
-  type: 1
-  itemDescription: Useful for crafting household items.
-  rarity: 2
-  quantity: 3
-  buyingPrice: 15
-  sellingPrice: 8
-  weight: 4
+  ItemUIPrefab: {fileID: 3808915681365129664, guid: 390aaa73af4cc534dbe357c6b5ab6213, type: 3}
+  ItemIcon: {fileID: 121622845, guid: 67616ddcb1f113b4b8f91a5126610808, type: 3}
+  Type: 1
+  ItemDescription: Useful for crafting household items
+  Rarity: 2
+  Quantity: 3
+  BuyingPrice: 15
+  SellingPrice: 8
+  Weight: 4

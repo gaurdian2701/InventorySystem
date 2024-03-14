@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e570952a5b1256b46b27bb11ab3e5bcf, type: 3}
   m_Name: Bread
   m_EditorClassIdentifier: 
-  itemUIPrefab: {fileID: 3808915681365129664, guid: 390aaa73af4cc534dbe357c6b5ab6213, type: 3}
-  itemIcon: {fileID: -1010968288, guid: 67616ddcb1f113b4b8f91a5126610808, type: 3}
-  type: 3
-  itemDescription: 'Health Recovery: +2 for 10 seconds.'
-  rarity: 1
-  quantity: 20
-  buyingPrice: 3
-  sellingPrice: 1
-  weight: 0.3
+  ItemUIPrefab: {fileID: 3808915681365129664, guid: 390aaa73af4cc534dbe357c6b5ab6213, type: 3}
+  ItemIcon: {fileID: -1010968288, guid: 67616ddcb1f113b4b8f91a5126610808, type: 3}
+  Type: 3
+  ItemDescription: 'Helath Recovery: +2 for 10 seconds'
+  Rarity: 1
+  Quantity: 20
+  BuyingPrice: 3
+  SellingPrice: 1
+  Weight: 0.3

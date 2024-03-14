@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e570952a5b1256b46b27bb11ab3e5bcf, type: 3}
   m_Name: RubyNecklace
   m_EditorClassIdentifier: 
-  itemUIPrefab: {fileID: 3808915681365129664, guid: 390aaa73af4cc534dbe357c6b5ab6213, type: 3}
-  itemIcon: {fileID: 1659152709, guid: 67616ddcb1f113b4b8f91a5126610808, type: 3}
-  type: 4
-  itemDescription: You can sell this for a fortune.
-  rarity: 4
-  quantity: 1
-  buyingPrice: 50000
-  sellingPrice: 20000
-  weight: 2
+  ItemUIPrefab: {fileID: 3808915681365129664, guid: 390aaa73af4cc534dbe357c6b5ab6213, type: 3}
+  ItemIcon: {fileID: 1659152709, guid: 67616ddcb1f113b4b8f91a5126610808, type: 3}
+  Type: 4
+  ItemDescription: You can sell this to the right persson for a fortune.
+  Rarity: 4
+  Quantity: 1
+  BuyingPrice: 50000
+  SellingPrice: 100000
+  Weight: 2
