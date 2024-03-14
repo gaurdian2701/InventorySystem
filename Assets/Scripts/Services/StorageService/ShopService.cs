@@ -21,13 +21,13 @@ public class ShopService
     private StorageUI treasuresUI;
     private StorageUI materialsUI;
 
-    public List<ItemScriptableObject> currentShopItemList { get; private set; }
+    public List<ItemScriptableObject> CurrentShopItemList { get; private set; }
 
-    public List<ItemScriptableObject> mainShopList { get; private set; }
-    public List<ItemScriptableObject> weaponsList { get; private set; }
-    public List<ItemScriptableObject> consumablesList { get; private set; }
-    public List<ItemScriptableObject> treasuresList { get; private set; }
-    public List<ItemScriptableObject> materialsList { get; private set; }
+    public List<ItemScriptableObject> MainShopList { get; private set; }
+    public List<ItemScriptableObject> WeaponsList { get; private set; }
+    public List<ItemScriptableObject> ConsumablesList { get; private set; }
+    public List<ItemScriptableObject> TreasuresList { get; private set; }
+    public List<ItemScriptableObject> MaterialsList { get; private set; }
 
 
     public ShopService(
@@ -44,14 +44,14 @@ public class ShopService
         treasuresPanel = _treasuresPanel;
         materialsPanel = _materialsPanel;
 
-        mainShopList = new List<ItemScriptableObject>();
-        weaponsList = new List<ItemScriptableObject>();
-        consumablesList = new List<ItemScriptableObject>();
-        treasuresList = new List<ItemScriptableObject>();
-        materialsList = new List<ItemScriptableObject>();
-        currentShopItemList = new List<ItemScriptableObject>();
+        MainShopList = new List<ItemScriptableObject>();
+        WeaponsList = new List<ItemScriptableObject>();
+        ConsumablesList = new List<ItemScriptableObject>();
+        TreasuresList = new List<ItemScriptableObject>();
+        MaterialsList = new List<ItemScriptableObject>();
+        CurrentShopItemList = new List<ItemScriptableObject>();
 
-        currentShopItemList = mainShopList;
+        CurrentShopItemList = MainShopList;
         LoadData(dataLoadPath);
     }
 
@@ -67,14 +67,14 @@ public class ShopService
         {
             var newItem = GameObject.Instantiate(item);
             newItem.name = item.name;
-            AddItemToLists(newItem, newItem.quantity);
+            AddItemToLists(newItem, newItem.Quantity);
         }
 
-        mainShopUI = new StorageUI(mainShopPanel, mainShopList);
-        weaponsUI = new StorageUI(weaponsPanel, weaponsList);
-        consumablesUI = new StorageUI(consumablesPanel, consumablesList);
-        treasuresUI = new StorageUI(treasuresPanel, treasuresList);
-        materialsUI = new StorageUI(materialsPanel, materialsList); //Creating StorageUI instances for each type panel
+        mainShopUI = new StorageUI(mainShopPanel, MainShopList);
+        weaponsUI = new StorageUI(weaponsPanel, WeaponsList);
+        consumablesUI = new StorageUI(consumablesPanel, ConsumablesList);
+        treasuresUI = new StorageUI(treasuresPanel, TreasuresList);
+        materialsUI = new StorageUI(materialsPanel, MaterialsList); //Creating StorageUI instances for each type panel
     }
 
     //The currentShopItemList variable is used by the UI_InfoManager to read data belonging to the current active panel, 
@@ -85,24 +85,24 @@ public class ShopService
         switch(listType)
         {
             case ItemType.Weapon:
-                currentShopItemList = weaponsList; break;
+                CurrentShopItemList = WeaponsList; break;
 
             case ItemType.Consumable:
-                currentShopItemList = consumablesList; break;
+                CurrentShopItemList = ConsumablesList; break;
 
             case ItemType.Treasure:
-                currentShopItemList = treasuresList; break;
+                CurrentShopItemList = TreasuresList; break;
 
             case ItemType.Material:
-                currentShopItemList = materialsList; break;
+                CurrentShopItemList = MaterialsList; break;
 
             default: 
-                currentShopItemList = mainShopList; break;
+                CurrentShopItemList = MainShopList; break;
         }
     }
     public void AddItemToShop(ItemScriptableObject item, int quantity)
     {
-        ItemScriptableObject itemFound = mainShopList.Find((x) => x.name == item.name);
+        ItemScriptableObject itemFound = MainShopList.Find((x) => x.name == item.name);
         int mainIndex = int.MinValue;
         int typeIndex = int.MinValue;
 
@@ -111,8 +111,8 @@ public class ShopService
 
         else
         {
-            mainIndex = mainShopList.IndexOf(itemFound);
-            itemFound.quantity += quantity;
+            mainIndex = MainShopList.IndexOf(itemFound);
+            itemFound.Quantity += quantity;
             FindItemInOtherLists(itemFound, out typeIndex);
         }
 
@@ -122,34 +122,34 @@ public class ShopService
 
     private void AddItemToLists(ItemScriptableObject item, int quantity) //Adds the item to the main list as well as the list corresponding to its type
     {
-        mainShopList.Add(item);
+        MainShopList.Add(item);
 
-        switch (item.type)
+        switch (item.Type)
         {
             case ItemType.Weapon:
-                weaponsList.Add(item);
+                WeaponsList.Add(item);
                 break;
 
             case ItemType.Consumable:
-                consumablesList.Add(item);
+                ConsumablesList.Add(item);
                 break;
 
             case ItemType.Treasure:
-                treasuresList.Add(item);
+                TreasuresList.Add(item);
                 break;
 
             case ItemType.Material:
-                materialsList.Add(item);
+                MaterialsList.Add(item);
                 break;
 
             default: break;
         }
 
-        item.quantity = quantity;
+        item.Quantity = quantity;
     }
     private void AddItemToTypeUI(ItemScriptableObject item, int quantity, int index) //Adds the item to the corresponding type panel
     {
-        switch (item.type)
+        switch (item.Type)
         {
             case ItemType.Weapon:
                 weaponsUI.AddItemToStorageUI(item, quantity, index);
@@ -169,24 +169,24 @@ public class ShopService
 
     public void RemoveItemFromShop(ItemScriptableObject item, int quantity)
     {
-        ItemScriptableObject itemFound = mainShopList.Find((x) => x.name == item.name);
+        ItemScriptableObject itemFound = MainShopList.Find((x) => x.name == item.name);
 
-        if (!itemFound || itemFound.quantity < quantity)
+        if (!itemFound || itemFound.Quantity < quantity)
             return;
 
-        int mainIndex = mainShopList.IndexOf(itemFound);
+        int mainIndex = MainShopList.IndexOf(itemFound);
         int typeIndex = 0;
         var typeList = FindItemInOtherLists(itemFound, out typeIndex);
 
-        if (itemFound.quantity - quantity == 0)
+        if (itemFound.Quantity - quantity == 0)
         {
-            itemFound.quantity = 0;
+            itemFound.Quantity = 0;
 
             typeList.Remove(itemFound);
-            mainShopList.Remove(itemFound);
+            MainShopList.Remove(itemFound);
         }
         else
-            itemFound.quantity -= quantity;
+            itemFound.Quantity -= quantity;
 
         mainShopUI.RemoveItemFromStorageUI(itemFound, quantity, mainIndex);
         RemoveItemFromTypeUI(itemFound, quantity, typeIndex);
@@ -195,26 +195,26 @@ public class ShopService
     private List<ItemScriptableObject> FindItemInOtherLists(ItemScriptableObject item, out int index) //Finds the item in the corresponding type list
     {
         List<ItemScriptableObject> typeList = new List<ItemScriptableObject>();
-        switch (item.type)
+        switch (item.Type)
         {
             case ItemType.Weapon:
-                index = weaponsList.IndexOf(item);
-                typeList = weaponsList;
+                index = WeaponsList.IndexOf(item);
+                typeList = WeaponsList;
                 break;
 
             case ItemType.Consumable:
-                index = consumablesList.IndexOf(item);
-                typeList = consumablesList;
+                index = ConsumablesList.IndexOf(item);
+                typeList = ConsumablesList;
                 break;
 
             case ItemType.Treasure:
-                index = treasuresList.IndexOf(item);
-                typeList = treasuresList;
+                index = TreasuresList.IndexOf(item);
+                typeList = TreasuresList;
                 break;
 
             case ItemType.Material:
-                index = materialsList.IndexOf(item);
-                typeList = materialsList;
+                index = MaterialsList.IndexOf(item);
+                typeList = MaterialsList;
                 break;
 
             default:
@@ -226,7 +226,7 @@ public class ShopService
 
     private void RemoveItemFromTypeUI(ItemScriptableObject item, int quantity, int index) //Removes the item from the corresponding type panel
     {
-        switch (item.type)
+        switch (item.Type)
         {
             case ItemType.Weapon:
                 weaponsUI.RemoveItemFromStorageUI(item, quantity, index);

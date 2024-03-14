@@ -5,13 +5,13 @@ using System;
 [CreateAssetMenu(fileName = "ItemScriptableObject", menuName = "ScriptableObject/NewItem")]
 public class ItemScriptableObject : ScriptableObject
 {
-    public GameObject itemUIPrefab;
-    public Sprite itemIcon;
-    public ItemType type;
-    public string itemDescription;
-    public ItemRarity rarity;
-    public int quantity;
-    public int buyingPrice;
-    public int sellingPrice;
-    public float weight;
+    public GameObject ItemUIPrefab;
+    public Sprite ItemIcon;
+    public ItemType Type;
+    public string ItemDescription;
+    public ItemRarity Rarity;
+    public int Quantity;
+    public int BuyingPrice;
+    public int SellingPrice;
+    public float Weight;
 }

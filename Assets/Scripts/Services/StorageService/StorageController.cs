@@ -50,14 +50,14 @@ public class StorageController : GenericMonoSingleton<StorageController>, IPoint
 
         InitializePanels();
 
-        EventService.Instance.onBuyTransactionInitiated?.AddEventListener(DoBuyTransaction);
-        EventService.Instance.onSellTransactionInitiated?.AddEventListener(DoSellTransaction);
+        EventService.Instance.OnBuyTransactionInitiated?.AddEventListener(DoBuyTransaction);
+        EventService.Instance.OnSellTransactionInitiated?.AddEventListener(DoSellTransaction);
     }
 
     private void OnDestroy()
     {
-        EventService.Instance.onBuyTransactionInitiated?.RemoveEventListener(DoBuyTransaction);
-        EventService.Instance.onSellTransactionInitiated?.RemoveEventListener(DoSellTransaction);
+        EventService.Instance.OnBuyTransactionInitiated?.RemoveEventListener(DoBuyTransaction);
+        EventService.Instance.OnSellTransactionInitiated?.RemoveEventListener(DoSellTransaction);
     }
     private void InitializePanels()
     {
@@ -82,7 +82,7 @@ public class StorageController : GenericMonoSingleton<StorageController>, IPoint
 
         ItemScriptableObject itemToBeAdded = GameObject.Instantiate(currentItemSelected);
         itemToBeAdded.name = currentItemSelected.name;
-        itemToBeAdded.quantity = itemAmountSelected;
+        itemToBeAdded.Quantity = itemAmountSelected;
 
         inventoryService.AddItemToInventory(itemToBeAdded, itemAmountSelected);
         shopService.RemoveItemFromShop(currentItemSelected, itemAmountSelected);
@@ -94,13 +94,13 @@ public class StorageController : GenericMonoSingleton<StorageController>, IPoint
     {
         if (!inventoryService.HasEnoughCoins(itemToBeAdded, itemAmountSelected))
         {
-            EventService.Instance.onItemAdditionFailure.InvokeEvent(ItemAdditionFailureType.MONEY);
+            EventService.Instance.OnItemAdditionFailure.InvokeEvent(ItemAdditionFailureType.MONEY);
             return false;
         }
 
         else if (!inventoryService.HasEnoughWeight(itemToBeAdded, itemAmountSelected))
         {
-            EventService.Instance.onItemAdditionFailure.InvokeEvent(ItemAdditionFailureType.WEIGHT);
+            EventService.Instance.OnItemAdditionFailure.InvokeEvent(ItemAdditionFailureType.WEIGHT);
             return false;
         }
 
@@ -111,7 +111,7 @@ public class StorageController : GenericMonoSingleton<StorageController>, IPoint
     {
         ItemScriptableObject itemToBeAdded = GameObject.Instantiate(currentItemSelected);
         itemToBeAdded.name = currentItemSelected.name;
-        itemToBeAdded.quantity = itemAmountSelected;
+        itemToBeAdded.Quantity = itemAmountSelected;
 
         inventoryService.RemoveItemFromInventory(currentItemSelected, itemAmountSelected);
         shopService.AddItemToShop(itemToBeAdded, itemAmountSelected);
@@ -161,7 +161,7 @@ public class StorageController : GenericMonoSingleton<StorageController>, IPoint
     public GameObject GetActivePanel() {  return activePanel; }
     public GameObject GetInventoryPanel() { return mainInventoryPanel; } 
 
-    public float GetInventoryWeightLimit() { return inventoryScriptableObject.weightLimit; }
+    public float GetInventoryWeightLimit() { return inventoryScriptableObject.WeightLimit; }
     public void GatherResources() { inventoryService.FillInventory(); }
 
     private void HandleClickLogic()
@@ -169,6 +169,6 @@ public class StorageController : GenericMonoSingleton<StorageController>, IPoint
         int layer = results[0].gameObject.transform.parent.gameObject.layer;
         int itemIndex = results[0].gameObject.transform.GetSiblingIndex(); //Getting the selected item
 
-        EventService.Instance.onItemUIClickedEvent.InvokeEvent(layer, itemIndex);
+        EventService.Instance.OnItemUIClickedEvent.InvokeEvent(layer, itemIndex);
     }
 }

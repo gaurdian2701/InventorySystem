@@ -40,9 +40,9 @@ public class UI_InfoManager : MonoBehaviour
         itemInfoPanel.SetActive(false);
         buySellPanel.SetActive(false);
 
-        EventService.Instance.onItemUIClickedEvent?.AddEventListener(PopUpInfoPanel);
-        EventService.Instance.onInventoryUpdated?.AddEventListener(UpdateCurrencyAndWeight);
-        EventService.Instance.onItemAdditionFailure?.AddEventListener(HandleItemAdditionFailure);
+        EventService.Instance.OnItemUIClickedEvent?.AddEventListener(PopUpInfoPanel);
+        EventService.Instance.OnInventoryUpdated?.AddEventListener(UpdateCurrencyAndWeight);
+        EventService.Instance.OnItemAdditionFailure?.AddEventListener(HandleItemAdditionFailure);
 
         inventoryPanel = StorageController.Instance.GetInventoryPanel();
         shopPanel = StorageController.Instance.GetActivePanel();
@@ -55,9 +55,9 @@ public class UI_InfoManager : MonoBehaviour
 
     private void OnDestroy()
     {
-        EventService.Instance.onItemUIClickedEvent?.RemoveEventListener(PopUpInfoPanel);
-        EventService.Instance.onInventoryUpdated?.RemoveEventListener(UpdateCurrencyAndWeight);
-        EventService.Instance.onItemAdditionFailure?.RemoveEventListener(HandleItemAdditionFailure);
+        EventService.Instance.OnItemUIClickedEvent?.RemoveEventListener(PopUpInfoPanel);
+        EventService.Instance.OnInventoryUpdated?.RemoveEventListener(UpdateCurrencyAndWeight);
+        EventService.Instance.OnItemAdditionFailure?.RemoveEventListener(HandleItemAdditionFailure);
     }
     private void HandleItemAdditionFailure(ItemAdditionFailureType type)
     {
@@ -79,14 +79,14 @@ public class UI_InfoManager : MonoBehaviour
         if (layer == inventoryPanel.layer)
         {
             currentAction = CurrentAction.SELL;
-            item = StorageController.Instance.GetInventoryService().inventoryItems[itemIndex];
-            ShowInfo(item, item.sellingPrice);
+            item = StorageController.Instance.GetInventoryService().InventoryItems[itemIndex];
+            ShowInfo(item, item.SellingPrice);
         }
         else if (layer == shopPanel.layer)
         {
             currentAction = CurrentAction.BUY;
-            item = StorageController.Instance.GetShopService().currentShopItemList[itemIndex];
-            ShowInfo(item, item.buyingPrice);
+            item = StorageController.Instance.GetShopService().CurrentShopItemList[itemIndex];
+            ShowInfo(item, item.BuyingPrice);
         }
         else
         {
@@ -102,11 +102,11 @@ public class UI_InfoManager : MonoBehaviour
 
         itemInfoPanel.SetActive(true);
         itemInfoPanelTexts[0].text = itemInfo.name.ToString();
-        itemInfoPanelTexts[1].text = itemInfo.type.ToString();
-        itemInfoPanelTexts[2].text = itemInfo.itemDescription.ToString();
-        itemInfoPanelTexts[3].text = itemInfo.rarity.ToString();
-        itemInfoPanelTexts[4].text = "Weight: " + itemInfo.weight.ToString();
-        itemInfoPanelTexts[5].text = "Price: " + price.ToString() + " Qty: " + itemInfo.quantity.ToString();
+        itemInfoPanelTexts[1].text = itemInfo.Type.ToString();
+        itemInfoPanelTexts[2].text = itemInfo.ItemDescription.ToString();
+        itemInfoPanelTexts[3].text = itemInfo.Rarity.ToString();
+        itemInfoPanelTexts[4].text = "Weight: " + itemInfo.Weight.ToString();
+        itemInfoPanelTexts[5].text = "Price: " + price.ToString() + " Qty: " + itemInfo.Quantity.ToString();
     }
 
     public void ShowBuySellPanel()
@@ -141,10 +141,10 @@ public class UI_InfoManager : MonoBehaviour
 
     public void UpdateByIncrease()
     {
-        if (itemAmountSelected >= currentItemSelected.quantity)
+        if (itemAmountSelected >= currentItemSelected.Quantity)
             return;
 
-        int price = currentAction == CurrentAction.BUY ? currentItemSelected.buyingPrice : currentItemSelected.sellingPrice;
+        int price = currentAction == CurrentAction.BUY ? currentItemSelected.BuyingPrice : currentItemSelected.SellingPrice;
         buySellInfoText.text = $"{++itemAmountSelected} {currentItemSelected.name} FOR {itemAmountSelected * price} coins";
     }
   
@@ -153,7 +153,7 @@ public class UI_InfoManager : MonoBehaviour
         if (itemAmountSelected <= 1)
             return;
 
-        int price = currentAction == CurrentAction.BUY ? currentItemSelected.buyingPrice : currentItemSelected.sellingPrice;
+        int price = currentAction == CurrentAction.BUY ? currentItemSelected.BuyingPrice : currentItemSelected.SellingPrice;
         buySellInfoText.text = $"{--itemAmountSelected} {currentItemSelected.name} FOR {itemAmountSelected * price} coins";
     }
 
@@ -162,14 +162,14 @@ public class UI_InfoManager : MonoBehaviour
 
         if (currentAction == CurrentAction.SELL)
         {
-            DisplayTransactionStatusMessage($"SOLD {itemAmountSelected} {currentItemSelected.name} for {currentItemSelected.sellingPrice * itemAmountSelected}");
-            EventService.Instance.onSellTransactionInitiated.InvokeEvent(currentItemSelected, itemAmountSelected);
+            DisplayTransactionStatusMessage($"SOLD {itemAmountSelected} {currentItemSelected.name} for {currentItemSelected.SellingPrice * itemAmountSelected}");
+            EventService.Instance.OnSellTransactionInitiated.InvokeEvent(currentItemSelected, itemAmountSelected);
         }
 
         else if(currentAction == CurrentAction.BUY)
         {
-            DisplayTransactionStatusMessage($"BOUGHT {itemAmountSelected} {currentItemSelected.name} for {currentItemSelected.buyingPrice * itemAmountSelected}");
-            EventService.Instance.onBuyTransactionInitiated.InvokeEvent(currentItemSelected, itemAmountSelected);
+            DisplayTransactionStatusMessage($"BOUGHT {itemAmountSelected} {currentItemSelected.name} for {currentItemSelected.BuyingPrice * itemAmountSelected}");
+            EventService.Instance.OnBuyTransactionInitiated.InvokeEvent(currentItemSelected, itemAmountSelected);
         }
 
         CloseBuySellPanel();

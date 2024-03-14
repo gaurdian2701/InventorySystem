@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class EventService : GenericMonoSingleton<EventService>
 {
-    public EventController<int, int> onItemUIClickedEvent;
-    public EventController<int, float> onInventoryUpdated;
+    public EventController<int, int> OnItemUIClickedEvent;
+    public EventController<int, float> OnInventoryUpdated;
 
-    public EventController<ItemAdditionFailureType> onItemAdditionFailure;
-    public EventController<ItemScriptableObject, int> onBuyTransactionInitiated;
-    public EventController<ItemScriptableObject, int> onSellTransactionInitiated;
+    public EventController<ItemAdditionFailureType> OnItemAdditionFailure;
+    public EventController<ItemScriptableObject, int> OnBuyTransactionInitiated;
+    public EventController<ItemScriptableObject, int> OnSellTransactionInitiated;
 
     protected override void Awake()
     {
@@ -18,10 +18,10 @@ public class EventService : GenericMonoSingleton<EventService>
 
     public EventService()
     {
-        onItemUIClickedEvent = new EventController<int, int>();
-        onInventoryUpdated = new EventController<int, float>();
-        onItemAdditionFailure = new EventController<ItemAdditionFailureType>();
-        onBuyTransactionInitiated = new EventController<ItemScriptableObject, int>();
-        onSellTransactionInitiated = new EventController<ItemScriptableObject, int>();
+        OnItemUIClickedEvent = new EventController<int, int>();
+        OnInventoryUpdated = new EventController<int, float>();
+        OnItemAdditionFailure = new EventController<ItemAdditionFailureType>();
+        OnBuyTransactionInitiated = new EventController<ItemScriptableObject, int>();
+        OnSellTransactionInitiated = new EventController<ItemScriptableObject, int>();
     }
 }
