@@ -106,6 +106,7 @@ public class ShopService
         int mainIndex = int.MinValue;
         int typeIndex = int.MinValue;
         ItemScriptableObject itemFound = null;
+        bool itemHasBeenFound = false;
 
         for(int i=0; i< MainShopList.Count; i++)
             if (MainShopList[i].name == item.name)
@@ -119,12 +120,13 @@ public class ShopService
 
         else
         {
+            itemHasBeenFound = true;
             itemFound.Quantity += quantity;
             FindItemInOtherLists(itemFound, out typeIndex);
         }
 
-        mainShopUI.AddItemToStorageUI(item, quantity, mainIndex);
-        AddItemToTypeUI(item, quantity, typeIndex);
+        mainShopUI.AddItemToStorageUI(item, quantity, mainIndex, itemHasBeenFound);
+        AddItemToTypeUI(item, quantity, typeIndex, itemHasBeenFound);
     }
 
     private void AddItemToLists(ItemScriptableObject item, int quantity) //Adds the item to the main list as well as the list corresponding to its type
@@ -154,21 +156,21 @@ public class ShopService
 
         item.Quantity = quantity;
     }
-    private void AddItemToTypeUI(ItemScriptableObject item, int quantity, int index) //Adds the item to the corresponding type panel
+    private void AddItemToTypeUI(ItemScriptableObject item, int quantity, int index, bool itemAlreadyExists) //Adds the item to the corresponding type panel
     {
         switch (item.Type)
         {
             case ItemType.Weapon:
-                weaponsUI.AddItemToStorageUI(item, quantity, index);
+                weaponsUI.AddItemToStorageUI(item, quantity, index, itemAlreadyExists);
                 break;
             case ItemType.Consumable:
-                consumablesUI.AddItemToStorageUI(item, quantity, index);
+                consumablesUI.AddItemToStorageUI(item, quantity, index, itemAlreadyExists);
                 break;
             case ItemType.Treasure:
-                treasuresUI.AddItemToStorageUI(item, quantity, index);
+                treasuresUI.AddItemToStorageUI(item, quantity, index, itemAlreadyExists);
                 break;
             case ItemType.Material:
-                materialsUI.AddItemToStorageUI(item, quantity, index);
+                materialsUI.AddItemToStorageUI(item, quantity, index, itemAlreadyExists);
                 break;
             default: break;
         }

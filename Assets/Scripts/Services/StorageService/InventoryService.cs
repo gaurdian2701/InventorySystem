@@ -52,6 +52,7 @@ public class InventoryService
     {
         ItemScriptableObject itemFound = InventoryItems.Find((x) => x.name == item.name);
         int index = int.MinValue;
+        bool itemHasBeenFound = false;
 
         if (!itemFound)
         {
@@ -61,11 +62,12 @@ public class InventoryService
 
         else
         {
+            itemHasBeenFound = true;
             itemFound.Quantity += quantity;
             index = InventoryItems.IndexOf(itemFound);
         }
 
-        inventoryUI.AddItemToStorageUI(item, quantity, index);
+        inventoryUI.AddItemToStorageUI(item, quantity, index, itemHasBeenFound);
         currentWeight += item.Weight * quantity;
 
         if(!isGathering)
