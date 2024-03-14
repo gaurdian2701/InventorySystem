@@ -11,13 +11,11 @@ public class InventoryService
     private GameObject inventoryPanel;
     private int itemLimit;
     private float weightLimit;
-
     private float currentWeight;
-    private int coinsOwned;
-
     private bool isGathering;
-
     private StorageUI inventoryUI;
+    private CurrencyController currencyController;
+    private const int startingCoins = 0;
     public List<ItemScriptableObject> InventoryItems { get; private set; }
 
     public InventoryService(InventoryScriptableObject inventorySO, GameObject _inventoryPanel, string dataLoadPath)
@@ -27,7 +25,7 @@ public class InventoryService
         weightLimit = inventorySO.WeightLimit;
 
         currentWeight = 0f;
-        coinsOwned = 0;
+        currencyController = new CurrencyController(startingCoins);
 
         isGathering = false;
 
@@ -50,46 +48,54 @@ public class InventoryService
 
     public void AddItemToInventory(ItemScriptableObject item, int quantity)
     {
-        ItemScriptableObject itemFound = InventoryItems.Find((x) => x.name == item.name);
-        int index = int.MinValue;
+        ItemScriptableObject itemFound = null;
+        int itemIndex = -1;
         bool itemHasBeenFound = false;
 
-        if (!itemFound)
+        for (int i = 0; i < InventoryItems.Count; i++)
+            if (InventoryItems[i].name == item.name)
+            {
+                itemIndex = i;
+                itemHasBeenFound = true;
+                itemFound = InventoryItems[i];
+            }
+
+        if (!itemHasBeenFound)
         {
             InventoryItems.Add(item);
             item.Quantity = quantity;
         }
-
         else
-        {
-            itemHasBeenFound = true;
             itemFound.Quantity += quantity;
-            index = InventoryItems.IndexOf(itemFound);
-        }
 
-        inventoryUI.AddItemToStorageUI(item, quantity, index, itemHasBeenFound);
+        inventoryUI.AddItemToStorageUI(item, quantity, itemIndex, itemHasBeenFound);
         currentWeight += item.Weight * quantity;
 
-        if(!isGathering)
-            coinsOwned -= item.BuyingPrice * quantity;
+        if (!isGathering)
+            currencyController.UpdateCoins(-item.BuyingPrice * quantity);
 
-        if(coinsOwned < 0)
-            coinsOwned = 0;
+        if(currencyController.CoinsOwned < 0)
+            currencyController.UpdateCoins(0);
 
-        GameService.Instance.EventService.OnInventoryUpdated.Invoke(coinsOwned, currentWeight);
+        GameService.Instance.EventService.OnInventoryUpdated.Invoke(currencyController.CoinsOwned, currentWeight);
     }
 
     public void RemoveItemFromInventory(ItemScriptableObject item, int quantity)
     {
-        ItemScriptableObject itemFound = InventoryItems.Find((x) => x.name == item.name);
+        ItemScriptableObject itemFound = null;
+        int itemIndex = -1;
+        for(int i = 0; i < InventoryItems.Count; i++)
+            if (InventoryItems[i].name == item.name)
+            {
+                InventoryItems.RemoveAt(i);
+                itemIndex = i;
+            }
 
         if (!itemFound || !CanRemoveItems(itemFound, quantity))
             return;
 
-        int index = InventoryItems.IndexOf(itemFound);
-
         currentWeight -= itemFound.Weight * quantity;
-        coinsOwned += itemFound.SellingPrice * quantity;
+        currencyController.UpdateCoins(itemFound.SellingPrice * quantity);
 
         if (itemFound.Quantity - quantity == 0)
         {
@@ -99,8 +105,8 @@ public class InventoryService
         else
             itemFound.Quantity -= quantity;
 
-        inventoryUI.RemoveItemFromStorageUI(itemFound, quantity, index);
-        GameService.Instance.EventService.OnInventoryUpdated.Invoke(coinsOwned, currentWeight);
+        inventoryUI.RemoveItemFromStorageUI(itemFound, quantity, itemIndex);
+        GameService.Instance.EventService.OnInventoryUpdated.Invoke(currencyController.CoinsOwned, currentWeight);
     }
 
     public void FillInventory()
@@ -136,7 +142,7 @@ public class InventoryService
 
     public bool HasEnoughCoins(ItemScriptableObject item, int quantity)
     {
-        if (coinsOwned < item.BuyingPrice * quantity)
+        if (currencyController.CoinsOwned < item.BuyingPrice * quantity)
             return false;
 
         return true;
