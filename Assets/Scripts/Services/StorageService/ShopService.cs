@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using Unity.VisualScripting;
@@ -52,12 +53,12 @@ public class ShopService
         CurrentShopItemList = new List<ItemScriptableObject>();
 
         CurrentShopItemList = MainShopList;
-        LoadData(dataLoadPath);
+        InitializeShopData(dataLoadPath);
     }
 
-    private void LoadData(string dataLoadPath)
+    private void InitializeShopData(string dataLoadPath)
     {
-        var shopItemsList = Resources.LoadAll<ItemScriptableObject>(dataLoadPath); //Loading all the shop items
+        ItemScriptableObject[] shopItemsList = Resources.LoadAll<ItemScriptableObject>(dataLoadPath); //Loading all the shop items
         InitializeShopUI(shopItemsList);
     }
 
@@ -65,7 +66,7 @@ public class ShopService
     {
         foreach (var item in shopItemsList)
         {
-            var newItem = GameObject.Instantiate(item);
+            ItemScriptableObject newItem = GameObject.Instantiate(item);
             newItem.name = item.name;
             AddItemToLists(newItem, newItem.Quantity);
         }
@@ -102,16 +103,22 @@ public class ShopService
     }
     public void AddItemToShop(ItemScriptableObject item, int quantity)
     {
-        ItemScriptableObject itemFound = MainShopList.Find((x) => x.name == item.name);
         int mainIndex = int.MinValue;
         int typeIndex = int.MinValue;
+        ItemScriptableObject itemFound = null;
 
-        if (!itemFound)
+        for(int i=0; i< MainShopList.Count; i++)
+            if (MainShopList[i].name == item.name)
+            {
+                mainIndex = i;
+                itemFound = MainShopList[i];
+            }
+
+        if (itemFound == null)
             AddItemToLists(item, quantity);
 
         else
         {
-            mainIndex = MainShopList.IndexOf(itemFound);
             itemFound.Quantity += quantity;
             FindItemInOtherLists(itemFound, out typeIndex);
         }
