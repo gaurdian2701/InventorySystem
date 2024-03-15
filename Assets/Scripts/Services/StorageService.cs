@@ -6,25 +6,8 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class StorageService/* : IPointerClickHandler*/
+public class StorageService
 {
-    //[Header("MAIN UI PANELS")]
-    //[SerializeField] private GameObject mainInventoryPanel;
-    //[SerializeField] private GameObject mainShopPanel;
-
-    //[Header("Item Type Panels")]
-    //[SerializeField] private GameObject weaponsPanel;
-    //[SerializeField] private GameObject consumablesPanel;
-    //[SerializeField] private GameObject treasuresPanel;
-    //[SerializeField] private GameObject materialsPanel;
-
-    //[Header("DATA LOAD PATHS")]
-    //[SerializeField] private string inventoryServiceDataLoadPath;
-    //[SerializeField] private string shopServiceDataLoadPath;
-
-    //[Header("INVENTORY SERVICE DATA")]
-    //[SerializeField] private InventoryScriptableObject inventoryScriptableObject;
-
     private List<RaycastResult> results;
     private GraphicRaycaster raycaster;
     private GameObject activePanel;
@@ -46,24 +29,6 @@ public class StorageService/* : IPointerClickHandler*/
         GameService.Instance.EventService.OnBuyTransactionInitiated += DoBuyTransaction;
         GameService.Instance.EventService.OnSellTransactionInitiated += DoSellTransaction;
     }
-    //protected override void Awake()
-    //{
-    //    raycaster = GetComponent<GraphicRaycaster>();
-    //    results = new List<RaycastResult>();
-
-    //    inventoryService = new InventoryService(inventoryScriptableObject, mainInventoryPanel, inventoryServiceDataLoadPath);
-    //    shopService = new ShopService(mainShopPanel,
-    //        weaponsPanel,
-    //        consumablesPanel,
-    //        treasuresPanel,
-    //        materialsPanel,
-    //        shopServiceDataLoadPath);
-
-    //    InitializePanels();
-
-    //    GameService.Instance.EventService.OnBuyTransactionInitiated += DoBuyTransaction;
-    //    GameService.Instance.EventService.OnSellTransactionInitiated += DoSellTransaction;
-    //}
 
     ~StorageService()
     {
@@ -161,25 +126,9 @@ public class StorageService/* : IPointerClickHandler*/
                 panel.SetActive(false);
     }
 
-    //public void OnPointerClick(PointerEventData eventData)
-    //{
-    //    raycaster.Raycast(eventData, results);
-
-    //    HandleClickLogic();
-    //    results.Clear();
-    //}
-
     public GameObject GetActivePanel() {  return activePanel; }
     public GameObject GetInventoryPanel() { return ui_Data.InventoryPanel; } 
 
     public float GetInventoryWeightLimit() { return inventoryScriptableObject.WeightLimit; }
     public void GatherResources() { inventoryService.FillInventory(); }
-
-    //private void HandleClickLogic()
-    //{
-    //    int layer = results[0].gameObject.transform.parent.gameObject.layer;
-    //    int itemIndex = results[0].gameObject.transform.GetSiblingIndex(); //Getting the selected item
-
-    //    GameService.Instance.EventService.OnItemUIClickedEvent.Invoke(layer, itemIndex);
-    //}
 }
