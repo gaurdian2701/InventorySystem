@@ -44,8 +44,8 @@ public class UIService : MonoBehaviour
         GameService.Instance.EventService.OnInventoryUpdated += UpdateCurrencyAndWeight;
         GameService.Instance.EventService.OnItemAdditionFailure += HandleItemAdditionFailure;
 
-        inventoryPanel = StorageController.Instance.GetInventoryPanel();
-        shopPanel = StorageController.Instance.GetActivePanel();
+        inventoryPanel = GameService.Instance.StorageService.GetInventoryPanel();
+        shopPanel = GameService.Instance.StorageService.GetActivePanel();
 
         itemInfoPanelTexts = itemInfoPanel.GetComponentsInChildren<TextMeshProUGUI>();
         itemAmountSelected = 0;
@@ -79,13 +79,13 @@ public class UIService : MonoBehaviour
         if (layer == inventoryPanel.layer)
         {
             currentAction = CurrentAction.SELL;
-            item = StorageController.Instance.GetInventoryService().InventoryItems[itemIndex];
+            item = GameService.Instance.StorageService.GetInventoryService().InventoryItems[itemIndex];
             ShowInfo(item, item.SellingPrice);
         }
         else if (layer == shopPanel.layer)
         {
             currentAction = CurrentAction.BUY;
-            item = StorageController.Instance.GetShopService().CurrentShopItemList[itemIndex];
+            item = GameService.Instance.StorageService.GetShopService().CurrentShopItemList[itemIndex];
             ShowInfo(item, item.BuyingPrice);
         }
         else
@@ -116,27 +116,27 @@ public class UIService : MonoBehaviour
 
     public void ShowWeaponsPanel()
     {
-        StorageController.Instance.SetActivePanel(ItemType.Weapon);
+        GameService.Instance.StorageService.SetActivePanel(ItemType.Weapon);
     }
 
     public void ShowConsumablesPanel()
     {
-        StorageController.Instance.SetActivePanel(ItemType.Consumable);
+        GameService.Instance.StorageService.SetActivePanel(ItemType.Consumable);
     }
 
     public void ShowTreasuresPanel()
     {
-        StorageController.Instance.SetActivePanel(ItemType.Treasure);
+        GameService.Instance.StorageService.SetActivePanel(ItemType.Treasure);
     }
 
     public void ShowMaterialsPanel()
     {
-        StorageController.Instance.SetActivePanel(ItemType.Material);
+        GameService.Instance.StorageService.SetActivePanel(ItemType.Material);
     }
 
     public void ShowAllPanel()
     {
-        StorageController.Instance.SetActivePanel(ItemType.None);
+        GameService.Instance.StorageService.SetActivePanel(ItemType.None);
     }
 
     public void UpdateByIncrease()

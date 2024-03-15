@@ -31,19 +31,13 @@ public class ShopService
     public List<ItemScriptableObject> MaterialsList { get; private set; }
 
 
-    public ShopService(
-        GameObject _mainShopPanel,
-        GameObject _weaponsPanel,
-        GameObject _consumablesPanel,
-        GameObject _treasuresPanel,
-        GameObject _materialsPanel,
-        string dataLoadPath)
+    public ShopService(UIPanelData UIData, string dataLoadPath)
     {
-        mainShopPanel = _mainShopPanel;
-        weaponsPanel = _weaponsPanel;
-        consumablesPanel = _consumablesPanel;
-        treasuresPanel = _treasuresPanel;
-        materialsPanel = _materialsPanel;
+        mainShopPanel = UIData.MainShopPanel;
+        weaponsPanel = UIData.WeaponsPanel;
+        consumablesPanel = UIData.ConsumablesPanel;
+        treasuresPanel = UIData.TreasuresPanel;
+        materialsPanel = UIData.MaterialsPanel;
 
         MainShopList = new List<ItemScriptableObject>();
         WeaponsList = new List<ItemScriptableObject>();
@@ -122,7 +116,7 @@ public class ShopService
         {
             itemHasBeenFound = true;
             itemFound.Quantity += quantity;
-            FindItemInOtherLists(itemFound, out typeIndex);
+            ReturnItemInOtherLists(itemFound, out typeIndex);
         }
 
         mainShopUI.AddItemToStorageUI(item, quantity, mainIndex, itemHasBeenFound);
@@ -185,7 +179,7 @@ public class ShopService
 
         int mainIndex = MainShopList.IndexOf(itemFound);
         int typeIndex = 0;
-        var typeList = FindItemInOtherLists(itemFound, out typeIndex);
+        List<ItemScriptableObject> typeList = ReturnItemInOtherLists(itemFound, out typeIndex);
 
         if (itemFound.Quantity - quantity == 0)
         {
@@ -201,7 +195,7 @@ public class ShopService
         RemoveItemFromTypeUI(itemFound, quantity, typeIndex);
     }
 
-    private List<ItemScriptableObject> FindItemInOtherLists(ItemScriptableObject item, out int index) //Finds the item in the corresponding type list
+    private List<ItemScriptableObject> ReturnItemInOtherLists(ItemScriptableObject item, out int index) //Finds the item in the corresponding type list
     {
         List<ItemScriptableObject> typeList = new List<ItemScriptableObject>();
         switch (item.Type)

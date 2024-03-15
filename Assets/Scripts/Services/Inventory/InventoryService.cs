@@ -16,6 +16,7 @@ public class InventoryService
     private StorageUI inventoryUI;
     private CurrencyController currencyController;
     private const int startingCoins = 0;
+    private const string resourcesPath = "ItemSOs/ResourceGathering";
     public List<ItemScriptableObject> InventoryItems { get; private set; }
 
     public InventoryService(InventoryScriptableObject inventorySO, GameObject _inventoryPanel, string dataLoadPath)
@@ -87,11 +88,11 @@ public class InventoryService
         for(int i = 0; i < InventoryItems.Count; i++)
             if (InventoryItems[i].name == item.name)
             {
-                InventoryItems.RemoveAt(i);
+                itemFound = InventoryItems[i];
                 itemIndex = i;
             }
 
-        if (!itemFound || !CanRemoveItems(itemFound, quantity))
+        if (itemFound == null || !CanRemoveItems(itemFound, quantity))
             return;
 
         currentWeight -= itemFound.Weight * quantity;
@@ -111,7 +112,7 @@ public class InventoryService
 
     public void FillInventory()
     {
-        var resourcesGathered = Resources.LoadAll<ItemScriptableObject>("ItemSOs/ResourceGathering");
+        var resourcesGathered = Resources.LoadAll<ItemScriptableObject>(resourcesPath);
 
         isGathering = true;
 
