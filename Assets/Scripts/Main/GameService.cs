@@ -28,6 +28,7 @@ public class GameService : GenericMonoSingleton<GameService>, IPointerClickHandl
     private List<RaycastResult> results;
     public EventService EventService {  get; private set; }
     public StorageService StorageService { get; private set; }
+    public TransactionService TransactionService { get; private set; }
     protected override void Awake()
     {
         base.Awake();
@@ -35,6 +36,7 @@ public class GameService : GenericMonoSingleton<GameService>, IPointerClickHandl
         results = new List<RaycastResult>();
         EventService = new EventService();
         InitializeStorageService();
+        TransactionService = new TransactionService(StorageService.GetInventoryService(), StorageService.GetShopService());
     }
 
     private void InitializeStorageService()
