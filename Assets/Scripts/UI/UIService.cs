@@ -31,7 +31,8 @@ public class UIService : MonoBehaviour
     private GameObject shopPanel;
     private ItemScriptableObject currentItemSelected;
     private int itemAmountSelected;
-
+    private const float transactionStatusTextDisplayTime = 3f;
+    private bool transactionStatusTextAlreadyDisplayed = false;
     private enum CurrentAction
     {
         BUY,
@@ -52,8 +53,7 @@ public class UIService : MonoBehaviour
         inventoryPanel = GameService.Instance.StorageService.GetInventoryPanel();
         shopPanel = GameService.Instance.StorageService.GetActivePanel();
         itemAmountSelected = 0;
-
-        ClearTransactionStatusText();
+        EmptyTransactionStatusText();
     }
 
     private void OnDestroy()
@@ -142,7 +142,7 @@ public class UIService : MonoBehaviour
         GameService.Instance.StorageService.SetActivePanel(ItemType.None);
     }
 
-    public void UpdateByIncrease()
+    public void IncreaseQuantityOfItemSelected()
     {
         if (itemAmountSelected >= currentItemSelected.Quantity)
             return;
@@ -151,7 +151,7 @@ public class UIService : MonoBehaviour
         buySellInfoText.text = $"{++itemAmountSelected} {currentItemSelected.name} FOR {itemAmountSelected * price} coins";
     }
   
-    public void UpdateByDecrease()
+    public void DecreaseQuantityOfItemSelected()
     {
         if (itemAmountSelected <= 1)
             return;
@@ -160,7 +160,7 @@ public class UIService : MonoBehaviour
         buySellInfoText.text = $"{--itemAmountSelected} {currentItemSelected.name} FOR {itemAmountSelected * price} coins";
     }
 
-    public void ConfirmPayment()
+    public void ShowPaymentConfirmation()
     {
 
         if (currentAction == CurrentAction.SELL)
@@ -182,12 +182,20 @@ public class UIService : MonoBehaviour
     private void DisplayTransactionStatusMessage(string message)
     {
         transactionStatusText.text = message;
-        if (IsInvoking(nameof(ClearTransactionStatusText)))
-            return;
-
-        Invoke(nameof(ClearTransactionStatusText), 3f);
+        StartCoroutine(ClearTransactionStatusText());
     }
-    private void ClearTransactionStatusText() => transactionStatusText.text = string.Empty;
+    private IEnumerator ClearTransactionStatusText()
+    {
+        if (transactionStatusTextAlreadyDisplayed)
+            yield return null;
+
+        transactionStatusTextAlreadyDisplayed = true;
+        yield return new WaitForSecondsRealtime(transactionStatusTextDisplayTime);
+        EmptyTransactionStatusText();
+        transactionStatusTextAlreadyDisplayed = false;
+    }
+
+    private void EmptyTransactionStatusText() => transactionStatusText.text = string.Empty;
     private void CloseBuySellPanel()
     {
         buySellPanel.SetActive(false);
@@ -197,7 +205,7 @@ public class UIService : MonoBehaviour
     private void OpenBuySellPanel()
     {
         buySellPanel.SetActive(true);
-        UpdateByIncrease();
+        IncreaseQuantityOfItemSelected();
         buySellInfoHeading.text = $"HOW MANY DO YOU WANT TO {currentAction}?";
     }
 }

@@ -343,8 +343,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1695853734}
-        m_TargetAssemblyTypeName: UI_InfoManager, Assembly-CSharp
-        m_MethodName: UpdateByDecrease
+        m_TargetAssemblyTypeName: UIService, Assembly-CSharp
+        m_MethodName: DecreaseQuantityOfItemSelected
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1970,8 +1970,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1695853734}
-        m_TargetAssemblyTypeName: UI_InfoManager, Assembly-CSharp
-        m_MethodName: UpdateByIncrease
+        m_TargetAssemblyTypeName: UIService, Assembly-CSharp
+        m_MethodName: IncreaseQuantityOfItemSelected
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2348,8 +2348,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1695853734}
-        m_TargetAssemblyTypeName: UI_InfoManager, Assembly-CSharp
-        m_MethodName: ConfirmPayment
+        m_TargetAssemblyTypeName: UIService, Assembly-CSharp
+        m_MethodName: ShowPaymentConfirmation
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
