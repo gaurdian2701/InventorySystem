@@ -5,17 +5,20 @@ Assets/Resources contains the Scriptable Object Instances of UI Items that are l
 
 All the scripts are present in the Assets/Scripts folder.
 
+Main Folder:
+- GameService Handles input and also acts as the main Service Locator.
+
 Services Folder:
-- Services folder contains the StorageController.cs script, which handles the creation of ShopService and InventoryService, as well has mouse click events(user input).
+- StorageService.cs handles the creation of ShopService and InventoryService
 - ShopService.cs maintains data related to the items in the shop. It also handles other data such as the different UI panels for each filtered item type.
 - InventoryService.cs does the same as ShopService except it contains other logic related to the amount of money the player owns as well as the weight of the Inventory.
+- TransactionService.cs handles Buy and Sell Transactions.
+- EventService handles all the events used in scripts(implemented for Observer Pattern).
 
 UI folder:
-- StorageUI.cs is a script that is dynamically instantiated as an object during runtime by both ShopService.cs and InventoryService.cs. This handles the data related to the UI of the items displayed.
-- StorageUI.cs takes in a panel and a list of items to be created in it's constructor declaration. Using this data, it fills the respective UI panel with items.
-- ShopService.cs actually creates 5 instances of the StorageUI.cs, each belonging to a particular item type.
+- StorageUI.cs is a script that is dynamically instantiated as an object during runtime by both ShopService.cs and InventoryService.cs. This handles the data related to the UI of the items displayed. It takes in a panel and a list of items to be created in it's constructor declaration. Using this data, it fills the respective UI panel with items.
+- UIService.cs handles all dynamic UI information that is displayed when the game is running.
 
-- UI_InfoManager.cs handles all dynamic on-screen info. This can include the info panel that activates when the player selects an item, the panel activated for buying/selling an item, transaction status text and info related to currency that the player holds as well as the overall weight of the inventory. 
 
 Design Patterns Used:
 - Service Locator
