@@ -28,3 +28,5 @@ Design Patterns Used:
 
 Below is the Architecture Diagram:
 
+![alt text](https://github.com/gaurdian2701/InventorySystem/blob/Feature5-CodeRefactoring/InventorySystemArch.jpg)
+
