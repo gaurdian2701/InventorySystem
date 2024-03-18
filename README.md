@@ -28,7 +28,3 @@ Design Patterns Used:
 
 Below is the Architecture Diagram:
 
-
-
-
-![](2024-02-13-16-00-46.png)
