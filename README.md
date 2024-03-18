@@ -18,6 +18,7 @@ UI folder:
 - UI_InfoManager.cs handles all dynamic on-screen info. This can include the info panel that activates when the player selects an item, the panel activated for buying/selling an item, transaction status text and info related to currency that the player holds as well as the overall weight of the inventory. 
 
 Design Patterns Used:
+- Service Locator
 - Dependency Injection 
     - Used when I create StorageUI from ShopService and InventoryService.
     - Used when I create ShopService and InventoryService from StorageController
