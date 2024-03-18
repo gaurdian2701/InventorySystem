@@ -3936,6 +3936,12 @@ MonoBehaviour:
   buySellInfoText: {fileID: 1797459426}
   buySellButtonText: {fileID: 7503998311696734480}
   transactionStatusText: {fileID: 560457090}
+  itemName: {fileID: 9209099667193143902}
+  itemType: {fileID: 4512758496944565330}
+  itemDescription: {fileID: 4244591122345462821}
+  itemRarity: {fileID: 3350972246255832011}
+  itemWeight: {fileID: 5927430564064929476}
+  itemQtyAndPrice: {fileID: 7289828325478674081}
 --- !u!4 &1695853735
 Transform:
   m_ObjectHideFlags: 0

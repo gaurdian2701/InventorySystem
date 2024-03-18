@@ -8,8 +8,6 @@ using UnityEngine.UI;
 
 public class StorageService
 {
-    private List<RaycastResult> results;
-    private GraphicRaycaster raycaster;
     private GameObject activePanel;
     private List<GameObject> itemPanels;
     private InventoryService inventoryService;

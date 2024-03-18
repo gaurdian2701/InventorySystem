@@ -19,13 +19,18 @@ public class UIService : MonoBehaviour
     [SerializeField] private TextMeshProUGUI buySellButtonText;
     [SerializeField] private TextMeshProUGUI transactionStatusText;
 
+    [Header("Item Info Panel Text")]
+    [SerializeField] private TextMeshProUGUI itemName;
+    [SerializeField] private TextMeshProUGUI itemType;
+    [SerializeField] private TextMeshProUGUI itemDescription;
+    [SerializeField] private TextMeshProUGUI itemRarity;
+    [SerializeField] private TextMeshProUGUI itemWeight;
+    [SerializeField] private TextMeshProUGUI itemQtyAndPrice;
+
     private GameObject inventoryPanel;
     private GameObject shopPanel;
-
     private ItemScriptableObject currentItemSelected;
     private int itemAmountSelected;
-
-    private TextMeshProUGUI[] itemInfoPanelTexts;
 
     private enum CurrentAction
     {
@@ -46,8 +51,6 @@ public class UIService : MonoBehaviour
 
         inventoryPanel = GameService.Instance.StorageService.GetInventoryPanel();
         shopPanel = GameService.Instance.StorageService.GetActivePanel();
-
-        itemInfoPanelTexts = itemInfoPanel.GetComponentsInChildren<TextMeshProUGUI>();
         itemAmountSelected = 0;
 
         ClearTransactionStatusText();
@@ -101,12 +104,12 @@ public class UIService : MonoBehaviour
         currentItemSelected = itemInfo;
 
         itemInfoPanel.SetActive(true);
-        itemInfoPanelTexts[0].text = itemInfo.name.ToString();
-        itemInfoPanelTexts[1].text = itemInfo.Type.ToString();
-        itemInfoPanelTexts[2].text = itemInfo.ItemDescription.ToString();
-        itemInfoPanelTexts[3].text = itemInfo.Rarity.ToString();
-        itemInfoPanelTexts[4].text = "Weight: " + itemInfo.Weight.ToString();
-        itemInfoPanelTexts[5].text = "Price: " + price.ToString() + " Qty: " + itemInfo.Quantity.ToString();
+        itemName.text = itemInfo.name.ToString();
+        itemType.text = itemInfo.Type.ToString();   
+        itemDescription.text = itemInfo.ItemDescription.ToString();
+        itemRarity.text = itemInfo.Rarity.ToString();
+        itemWeight.text = "Weight: " + itemInfo.Weight.ToString();
+        itemQtyAndPrice.text = "Price: " + price.ToString() + " Qty: " + itemInfo.Quantity.ToString();
     }
 
     public void ShowBuySellPanel()
